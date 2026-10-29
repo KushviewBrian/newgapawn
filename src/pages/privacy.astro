@@ -8,7 +8,7 @@ const updated = 'October 29, 2026';
 ---
 
 <Base title="Privacy Policy" description="How New Georgia Pawn handles the information you send through this website." og="home" breadcrumbs={crumbs}>
-  <PageHero eyebrow="Privacy" title="Privacy policy" lede={`Last updated ${updated}.`} crumbs={crumbs} />
+  <PageHero eyebrow="Privacy" title="Privacy policy" lede={`Last updated ${updated}.`} crumbs={crumbs} visitCard={false} />
   <section class="section">
     <div class="container">
       <div class="prose">
@@ -35,14 +35,14 @@ const updated = 'October 29, 2026';
         <h3>Spam protection</h3>
         <p>
           The offer form uses Cloudflare Turnstile to tell people from bots. Turnstile processes limited technical information about
-          your browser for that purpose only. See
+          your browser for that purpose only. See{' '}
           <a href="https://www.cloudflare.com/turnstile-privacy-policy/" rel="noopener">Cloudflare's Turnstile privacy notice</a>.
         </p>
 
         <h3>Facebook</h3>
         <p>
           Some pages show our public Facebook page. That box is loaded from Facebook only when you scroll to it. Facebook may set its
-          own cookies when it loads, and Facebook's
+          own cookies when it loads, and Facebook's{' '}
           <a href="https://www.facebook.com/privacy/policy/" rel="noopener">privacy policy</a> applies to it.
         </p>
 
@@ -61,7 +61,7 @@ const updated = 'October 29, 2026';
 
         <h2>Your choices</h2>
         <p>
-          To ask what we have about you, or to have an offer request deleted, email
+          To ask what we have about you, or to have an offer request deleted, email{' '}
           <a href={`mailto:${business.email}`}>{business.email}</a> or call {business.phone}.
         </p>
 

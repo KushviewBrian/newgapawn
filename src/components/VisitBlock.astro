@@ -20,11 +20,10 @@ const H = headingLevel;
       <span class="eyebrow">{eyebrow}</span>
       <H id="visit-h" class="h2">
         {business.address.street},<br />
-        {business.address.city}, {business.address.region}
-        {business.address.postalCode}
+        {`${business.address.city}, ${business.address.region} ${business.address.postalCode}`}
       </H>
       <OpenBadge />
-      <HoursTable heading="Store hours" />
+      <HoursTable heading="Store hours" headingTag={headingLevel === 'h1' ? 'h2' : 'h3'} />
       <div class="btn-row btn-row--stack-sm">
         <a class="btn btn--brass" href={`tel:${business.phoneE164}`} data-track="call" data-track-where="visit">
           <Icon name="phone" />

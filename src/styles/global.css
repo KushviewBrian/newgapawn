@@ -189,6 +189,10 @@ strong {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+.split > *,
+.grid > * {
+  min-width: 0;
+}
 .split {
   display: grid;
   gap: var(--s-7);
@@ -319,6 +323,7 @@ strong {
 .link-arrow {
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 0.35em;
   font-weight: 600;
   font-size: var(--text-small);
@@ -466,9 +471,12 @@ a.card:hover,
   font-weight: 600;
   font-size: var(--text-small);
 }
-.field .hint {
+.hint {
   font-size: 0.875rem;
   color: var(--muted);
+}
+legend {
+  padding: 0;
 }
 .input,
 .select,

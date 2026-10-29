@@ -32,7 +32,7 @@ const updated = new Date(`${guide.updated}T12:00:00Z`).toLocaleDateString('en-US
   breadcrumbs={crumbs}
   schema={[articleSchema(Astro.site!, { title: guide.title, description: guide.description, path, updated: guide.updated })]}
 >
-  <PageHero eyebrow="Guide" title={guide.title} lede={guide.description} crumbs={crumbs}>
+  <PageHero eyebrow="Guide" title={guide.title} lede={guide.description} crumbs={crumbs} visitCard={false}>
     <p class="small muted">Updated {updated} · {guide.readTime}</p>
   </PageHero>
 
@@ -98,9 +98,12 @@ const updated = new Date(`${guide.updated}T12:00:00Z`).toLocaleDateString('en-US
     list-style: none;
     padding: 0;
     display: grid;
-    gap: var(--s-3);
+    gap: 0;
   }
   .more a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     font-weight: 600;
   }
   .disclaimer {

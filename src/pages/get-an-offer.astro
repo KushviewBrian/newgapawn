@@ -8,6 +8,7 @@ const title = 'Get an Offer';
 const description =
   'Send photos of an item you want to pawn or sell to New Georgia Pawn in Dallas, GA. Tell us the brand and condition and we’ll get back to you with an offer.';
 const crumbs = [{ name: 'Get an Offer', path: '/get-an-offer/' }];
+// Falls back to Cloudflare's always-pass test key; set the real key before launch (npm run launch-check).
 const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
 
 const itemTypes = [
@@ -28,8 +29,8 @@ const conditions = ['Like new', 'Good, light wear', 'Fair, shows wear', 'Needs r
   <PageHero
     eyebrow="Save yourself a trip"
     title="Send a photo. Get an offer."
-    lede="Tell us what you have and add up to three photos. We'll call or text you back, usually the same business day."
-    crumbs={crumbs}
+    lede={`Tell us what you have and add up to three photos. We'll ${business.textEnabled ? 'call or text' : 'call'} you back, usually the same business day.`}
+    crumbs={crumbs} visitCard={false}
   >
     <ul class="checks small">
       <li>No obligation. A photo offer is a starting point; the final offer is made in person.</li>
@@ -128,7 +129,8 @@ const conditions = ['Like new', 'Good, light wear', 'Fair, shows wear', 'Needs r
           <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
         </div>
 
-        <div class="cf-turnstile" data-sitekey={siteKey} data-theme="light" data-size="flexible"></div>
+        <!-- Turnstile runs invisibly; it only appears if a visitor needs to confirm they are human. -->
+        <div class="cf-turnstile" data-sitekey={siteKey} data-theme="light" data-size="flexible" data-appearance="interaction-only"></div>
 
         <p class="error" data-form-error role="alert" hidden></p>
 

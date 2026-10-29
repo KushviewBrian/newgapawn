@@ -32,8 +32,7 @@ const columns = [
         <Wordmark tone="light" />
         <address>
           {business.address.street}<br />
-          {business.address.city}, {business.address.region}
-          {business.address.postalCode}<br />
+          {`${business.address.city}, ${business.address.region} ${business.address.postalCode}`}<br />
           <a href={`tel:${business.phoneE164}`} data-track="call" data-track-where="footer">{business.phone}</a><br />
           <a href={`mailto:${business.email}`}>{business.email}</a>
         </address>

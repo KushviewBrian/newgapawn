@@ -4,14 +4,17 @@ import { shop } from '../lib/shop';
 
 interface Props {
   heading?: string;
+  /** Keeps the outline in order: h2 under a page H1, h3 under a section H2. */
+  headingTag?: 'h2' | 'h3';
   showClosures?: boolean;
 }
-const { heading, showClosures = true } = Astro.props;
+const { heading, headingTag = 'h3', showClosures = true } = Astro.props;
+const Heading = headingTag;
 const upcoming = shop.closures.slice(0, 4);
 ---
 
 <div class="hours" data-hours-table>
-  {heading && <h3 class="heading">{heading}</h3>}
+  {heading && <Heading class="h3 heading">{heading}</Heading>}
   <table>
     <caption class="visually-hidden">Store hours, Eastern Time</caption>
     <tbody>

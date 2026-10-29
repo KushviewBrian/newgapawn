@@ -3,8 +3,11 @@
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import type { Crumb } from '../lib/schema';
+import VisitCard from './VisitCard.astro';
 
 interface Props {
+  /** Show the visit card when there's no photo or aside (default true). */
+  visitCard?: boolean;
   eyebrow?: string;
   title: string;
   lede?: string;
@@ -12,8 +15,9 @@ interface Props {
   photo?: ImageMetadata;
   photoAlt?: string;
 }
-const { eyebrow, title, lede, crumbs, photo, photoAlt = '' } = Astro.props;
-const hasAside = Astro.slots.has('aside') || Boolean(photo);
+const { eyebrow, title, lede, crumbs, photo, photoAlt = '', visitCard = true } = Astro.props;
+const hasSlotAside = Astro.slots.has('aside');
+const hasAside = hasSlotAside || Boolean(photo) || visitCard;
 ---
 
 <section class="hero">
@@ -49,8 +53,10 @@ const hasAside = Astro.slots.has('aside') || Boolean(photo);
         <div class="photo">
           <Picture formats={['avif', 'webp']} src={photo} alt={photoAlt} widths={[480, 800, 1200]} sizes="(min-width: 1024px) 460px, 100vw" loading="eager" fetchpriority="high" />
         </div>
-      ) : (
+      ) : hasSlotAside ? (
         <slot name="aside" />
+      ) : (
+        visitCard && <VisitCard />
       )
     }
   </div>

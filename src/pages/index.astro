@@ -34,7 +34,7 @@ const storefront = getPhoto('storefront');
           Pawn loans, gold and silver buying, and a full case of firearms, with FFL transfers welcome. Locally owned in
           Dallas, Georgia.
         </p>
-        <div class="btn-row btn-row--stack-sm">
+        <div class="btn-row hero-actions">
           <a class="btn btn--ink" href="/get-an-offer/" data-track="offer-cta" data-track-where="hero">Get an Offer</a>
           <a class="btn btn--brass" href={`tel:${business.phoneE164}`} data-track="call" data-track-where="hero">
             <Icon name="phone" /> Call the shop
@@ -124,6 +124,18 @@ const storefront = getPhoto('storefront');
   }
   .copy .btn-row {
     margin-top: var(--s-2);
+  }
+  @media (max-width: 479px) {
+    .hero-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .hero-actions > :first-child {
+      grid-column: 1 / -1;
+    }
+    .hero-actions .btn {
+      padding-inline: var(--s-3);
+    }
   }
   .photo :global(img) {
     width: 100%;

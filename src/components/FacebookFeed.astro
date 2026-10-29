@@ -46,11 +46,12 @@ const {
       <div
         class="fb-page"
         data-href={business.links.facebook}
-        data-tabs="timeline"
+        data-tabs="timeline,events"
+        data-width=""
         data-small-header="true"
         data-adapt-container-width="true"
         data-hide-cover="false"
-        data-show-facepile="false"
+        data-show-facepile="true"
       >
         <blockquote cite={business.links.facebook} class="fb-xfbml-parse-ignore">
           <a class="fallback" href={business.links.facebook} rel="noopener">
@@ -77,12 +78,14 @@ const {
     }
   }
 
-  const SDK_VERSION = 'v24.0';
+  // Matches the embed on our tsba site, which renders the timeline. In testing,
+  // newer versions with only the timeline tab collapsed to the Page header.
+  const SDK_VERSION = 'v19.0';
   let sdkRequested = false;
 
+  // Width stays empty so the plugin adapts to its container, as on tsba.
   function sizeFor(frame: HTMLElement) {
     const page = frame.querySelector<HTMLElement>('.fb-page')!;
-    page.dataset.width = String(Math.max(180, Math.min(500, Math.floor(frame.clientWidth))));
     page.dataset.height = String(Math.max(70, Math.floor(frame.clientHeight)));
   }
 
@@ -100,6 +103,7 @@ const {
     script.async = true;
     script.defer = true;
     script.crossOrigin = 'anonymous';
+    script.referrerPolicy = 'origin';
     document.body.append(script);
   }
 

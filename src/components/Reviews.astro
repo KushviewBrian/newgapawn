@@ -26,9 +26,15 @@ const rating = shop.rating;
       <h2 id="reviews-h">What our customers say</h2>
       {
         rating && (
-          <p class="muted">
-            {rating.value.toFixed(1)} average from {rating.count} reviews on {rating.source}
-          </p>
+          <div class="score-row">
+            <span class="score">{rating.value.toFixed(1)}</span>
+            <span class="score-meta">
+              <Stars value={rating.value} size={20} />
+              <span class="muted small">
+                Average from {rating.count} reviews on {rating.source}
+              </span>
+            </span>
+          </div>
         )
       }
     </div>
@@ -74,6 +80,24 @@ const rating = shop.rating;
     display: grid;
     gap: var(--s-3);
     margin-bottom: var(--s-6);
+  }
+  .score-row {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-4);
+    margin-top: var(--s-2);
+  }
+  .score {
+    font-family: var(--font-serif);
+    font-size: 3.5rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .score-meta {
+    display: grid;
+    gap: 4px;
+    text-align: left;
   }
   .quotes {
     list-style: none;

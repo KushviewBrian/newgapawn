@@ -1,4 +1,6 @@
 ---
+import { business } from '../data/site';
+
 interface Props {
   eyebrow?: string;
   heading?: string;
@@ -9,7 +11,7 @@ interface Props {
 const {
   eyebrow = 'Save yourself a trip',
   heading = "Send us a photo. We'll tell you what we can offer.",
-  text = "Snap up to three photos of the item you want to pawn or sell, tell us the brand and condition, and we'll call or text you back.",
+  text = `Snap up to three photos of the item you want to pawn or sell, tell us the brand and condition, and we'll ${business.textEnabled ? 'call or text' : 'call'} you back.`,
   intent,
 } = Astro.props;
 const href = intent ? `/get-an-offer/?type=${intent}` : '/get-an-offer/';
