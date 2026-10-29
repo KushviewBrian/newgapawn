@@ -6,7 +6,7 @@ import FacebookFeed from '../components/FacebookFeed.astro';
 import Icon from '../components/Icon.astro';
 import { Picture } from 'astro:assets';
 import { getPhoto, photoAlt } from '../lib/photos';
-import { business } from '../data/site';
+import { business, fullAddress } from '../data/site';
 
 const title = 'Hours & Directions, Villa Rica Hwy';
 const description =
@@ -14,24 +14,35 @@ const description =
 
 const storefront = getPhoto('storefront');
 
+// Route numbers use non-breaking hyphens (U+2011) so they never split across lines.
 const routes = [
   {
     from: 'From downtown Dallas',
-    text: 'Head south on GA-61 (Villa Rica Highway) toward Villa Rica. The shop is on Villa Rica Hwy in the New Georgia community, about 15 minutes from the square.',
+    origin: 'Dallas, GA',
+    text: 'Head south on GA‑61 (Villa Rica Highway) toward Villa Rica. The shop is on Villa Rica Hwy in the New Georgia community, about 15 minutes from the square.',
   },
   {
     from: 'From Villa Rica',
-    text: 'Take GA-61 north toward Dallas. Look for us on Villa Rica Hwy as you come into New Georgia, before you reach Dallas.',
+    origin: 'Villa Rica, GA',
+    text: 'Take GA‑61 north toward Dallas. Look for us on Villa Rica Hwy as you come into New Georgia, before you reach Dallas.',
   },
   {
     from: 'From Hiram',
-    text: 'Head west to Dallas on US-278, then take GA-61 (Villa Rica Highway) south toward Villa Rica.',
+    origin: 'Hiram, GA',
+    text: 'Head west to Dallas on US‑278, then take GA‑61 (Villa Rica Highway) south toward Villa Rica.',
   },
   {
     from: 'From Douglasville',
-    text: 'Take GA-92 north toward Hiram, then US-278 west to Dallas and GA-61 south. Or use the Directions button for the fastest route right now.',
+    origin: 'Douglasville, GA',
+    text: 'Take GA‑92 north toward Hiram, then US‑278 west to Dallas and GA‑61 south. Tap for the fastest route right now.',
   },
 ];
+
+/** Directions from a town to the shop: Google Maps by default, Apple Maps on Apple devices (see scripts/site.ts). */
+const directions = (origin: string) => ({
+  google: `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(`${business.legalName}, ${fullAddress}`)}`,
+  apple: `https://maps.apple.com/?saddr=${encodeURIComponent(origin)}&daddr=${encodeURIComponent(fullAddress)}`,
+});
 ---
 
 <Base title={title} description={description} og="visit" businessSchema breadcrumbs={[{ name: 'Visit', path: '/visit/' }]}>
@@ -74,9 +85,19 @@ const routes = [
       <ul class="grid grid-2 routes" role="list">
         {
           routes.map((r) => (
-            <li class="card">
-              <h3>{r.from}</h3>
-              <p class="muted small">{r.text}</p>
+            <li>
+              <a
+                class="card route"
+                href={directions(r.origin).google}
+                data-directions={directions(r.origin).apple}
+                data-track="directions"
+                data-track-where={`route-${r.origin.split(',')[0].toLowerCase().replace(/\s+/g, '-')}`}
+                rel="noopener"
+              >
+                <h3>{r.from}</h3>
+                <p class="muted small">{r.text}</p>
+                <span class="link-arrow">Get directions from {r.origin.split(',')[0]}</span>
+              </a>
             </li>
           ))
         }
@@ -140,9 +161,17 @@ const routes = [
     list-style: none;
     padding: 0;
   }
-  .routes .card {
+  .route {
     display: grid;
     gap: var(--s-2);
+    height: 100%;
+    align-content: start;
+  }
+  .route .link-arrow {
+    color: var(--brass-deep);
+  }
+  .route:hover .link-arrow {
+    color: var(--ink);
   }
   .contact .card {
     display: grid;
