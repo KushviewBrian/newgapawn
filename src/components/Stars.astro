@@ -1,0 +1,32 @@
+---
+interface Props {
+  value?: number;
+  size?: number;
+}
+const { value = 5, size = 16 } = Astro.props;
+const full = Math.round(value);
+---
+
+<span class="stars" role="img" aria-label={`${value.toFixed(1)} out of 5 stars`}>
+  {
+    Array.from({ length: 5 }, (_, i) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" class:list={{ off: i >= full }}>
+        <path d="m12 2.8 2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8L12 2.8Z" />
+      </svg>
+    ))
+  }
+</span>
+
+<style>
+  .stars {
+    display: inline-flex;
+    gap: 2px;
+    color: var(--brass);
+  }
+  svg {
+    fill: currentColor;
+  }
+  .off {
+    fill: var(--stone-strong);
+  }
+</style>

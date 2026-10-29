@@ -1,0 +1,69 @@
+---
+/** Sticky Call · Directions · Hours bar on phones. */
+import Icon from './Icon.astro';
+import { business, mapsLinks } from '../data/site';
+
+const hoursHref = Astro.url.pathname === '/visit/' || Astro.url.pathname === '/' ? '#hours' : '/visit/#hours';
+---
+
+<nav class="action-bar" aria-label="Quick actions">
+  <a class="primary" href={`tel:${business.phoneE164}`} data-track="call" data-track-where="action-bar">
+    <Icon name="phone" />
+    <span>Call</span>
+  </a>
+  <a href={mapsLinks.google} data-directions={mapsLinks.apple} data-track="directions" data-track-where="action-bar" rel="noopener">
+    <Icon name="pin" />
+    <span>Directions</span>
+  </a>
+  <a href={hoursHref}>
+    <Icon name="clock" />
+    <span>Hours</span>
+  </a>
+</nav>
+
+<style>
+  .action-bar {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 50;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--s-2);
+    padding: var(--s-2) var(--s-2) calc(var(--s-2) + env(safe-area-inset-bottom));
+    background: var(--charcoal);
+    box-shadow: 0 -6px 20px -10px rgb(0 0 0 / 0.4);
+  }
+  a {
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 2px;
+    min-height: var(--action-bar-h);
+    border-radius: var(--radius);
+    color: var(--on-dark);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--on-dark);
+    background: rgb(255 255 255 / 0.06);
+  }
+  .primary {
+    background: var(--brass);
+    color: var(--ink);
+  }
+  .primary:hover {
+    background: var(--brass-light);
+    color: var(--ink);
+  }
+  a :global(svg) {
+    width: 22px;
+    height: 22px;
+  }
+  @media (min-width: 1024px) {
+    .action-bar {
+      display: none;
+    }
+  }
+</style>

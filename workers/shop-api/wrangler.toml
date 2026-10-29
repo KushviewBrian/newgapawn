@@ -1,0 +1,43 @@
+# shop-api: the site's only server code. Handles the Get an Offer form, click
+# counts, the owner's "Publish now" link, and the scheduled rebuilds.
+#
+# Deploy:  npx wrangler deploy   (from workers/shop-api)
+# Secrets: npx wrangler secret put TURNSTILE_SECRET   (and the others below)
+
+name = "newgapawn-shop-api"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+
+# Serve under the site's own domain so the browser posts to /api/*.
+routes = [{ pattern = "newgeorgiapawn.com/api/*", zone_name = "newgeorgiapawn.com" }]
+
+[triggers]
+# Every 3 hours: rebuild the site (fresh Sheet data) and send closure reminders.
+# 1st of the month, 9 AM Eastern (13:00 UTC): monthly click summary.
+crons = ["0 */3 * * *", "0 13 1 * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "newgapawn"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+# Outgoing mail through Cloudflare Email Routing. Every address here must be
+# a verified destination address on the zone.
+[[send_email]]
+name = "MAIL"
+allowed_destination_addresses = ["newgeorgiapawn@gmail.com"]
+
+[vars]
+SITE_URL = "https://newgeorgiapawn.com"
+MAIL_FROM = "website@newgeorgiapawn.com"
+SHOP_TO = "newgeorgiapawn@gmail.com"
+# Optional: the developer's address for build alerts (must also be in
+# allowed_destination_addresses above and verified in Email Routing).
+DEV_TO = ""
+SHEET_PUB_ID = ""
+SHEET_GID_CLOSURES = ""
+
+# Secrets (wrangler secret put):
+#   TURNSTILE_SECRET   Turnstile secret key
+#   DEPLOY_HOOK_URL    Cloudflare Pages deploy hook URL
+#   PUBLISH_KEY        long random string for the owner's Publish now link

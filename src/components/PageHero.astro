@@ -1,0 +1,95 @@
+---
+/** Inner-page hero: breadcrumb, eyebrow, H1, lede, actions, optional photo or aside. */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import type { Crumb } from '../lib/schema';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lede?: string;
+  crumbs?: Crumb[];
+  photo?: ImageMetadata;
+  photoAlt?: string;
+}
+const { eyebrow, title, lede, crumbs, photo, photoAlt = '' } = Astro.props;
+const hasAside = Astro.slots.has('aside') || Boolean(photo);
+---
+
+<section class="hero">
+  <div class:list={['container', { split: hasAside, 'split--center': hasAside }]}>
+    <div class="copy">
+      {
+        crumbs && (
+          <nav aria-label="Breadcrumb" class="crumbs">
+            <ol>
+              <li>
+                <a href="/">Home</a>
+              </li>
+              {crumbs.map((c, i) => (
+                <li>
+                  {i === crumbs.length - 1 ? (
+                    <span aria-current="page">{c.name}</span>
+                  ) : (
+                    <a href={c.path}>{c.name}</a>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )
+      }
+      {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+      <h1>{title}</h1>
+      {lede && <p class="lede">{lede}</p>}
+      <slot />
+    </div>
+    {
+      photo ? (
+        <div class="photo">
+          <Picture formats={['avif', 'webp']} src={photo} alt={photoAlt} widths={[480, 800, 1200]} sizes="(min-width: 1024px) 460px, 100vw" loading="eager" fetchpriority="high" />
+        </div>
+      ) : (
+        <slot name="aside" />
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: var(--s-7) var(--section-y);
+    border-bottom: var(--hairline);
+  }
+  .copy {
+    display: grid;
+    gap: var(--s-4);
+    align-content: start;
+  }
+  .copy > :global(.btn-row) {
+    margin-top: var(--s-2);
+  }
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    list-style: none;
+    padding: 0;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+  .crumbs li + li::before {
+    content: '/';
+    margin-right: var(--s-2);
+    color: var(--stone-strong);
+  }
+  .crumbs a {
+    color: var(--muted);
+  }
+  .photo :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+</style>

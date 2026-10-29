@@ -1,0 +1,118 @@
+---
+import Base from '../layouts/Base.astro';
+import VisitBlock from '../components/VisitBlock.astro';
+import OfferBand from '../components/OfferBand.astro';
+import FacebookFeed from '../components/FacebookFeed.astro';
+import Icon from '../components/Icon.astro';
+import { business } from '../data/site';
+
+const title = 'Hours & Directions, Villa Rica Hwy';
+const description =
+  'New Georgia Pawn, 7029 Villa Rica Hwy (GA-61), Dallas, GA 30157. Store hours, phone, and directions from Dallas, Hiram, Villa Rica, and Douglasville.';
+
+const routes = [
+  {
+    from: 'From downtown Dallas',
+    text: 'Head south on GA-61 (Villa Rica Highway) toward Villa Rica. The shop is on Villa Rica Hwy in the New Georgia community, about 15 minutes from the square.',
+  },
+  {
+    from: 'From Villa Rica',
+    text: 'Take GA-61 north toward Dallas. Look for us on Villa Rica Hwy as you come into New Georgia, before you reach Dallas.',
+  },
+  {
+    from: 'From Hiram',
+    text: 'Head west to Dallas on US-278, then take GA-61 (Villa Rica Highway) south toward Villa Rica.',
+  },
+  {
+    from: 'From Douglasville',
+    text: 'Take GA-92 north toward Hiram, then US-278 west to Dallas and GA-61 south. Or use the Directions button for the fastest route right now.',
+  },
+];
+---
+
+<Base title={title} description={description} og="visit" businessSchema breadcrumbs={[{ name: 'Visit', path: '/visit/' }]}>
+  <VisitBlock headingLevel="h1" eyebrow="Visit New Georgia Pawn" />
+
+  <section class="section section--band" aria-labelledby="dir-h">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Getting here</span>
+        <h2 id="dir-h">Directions from nearby towns</h2>
+      </div>
+      <ul class="grid grid-2 routes" role="list">
+        {
+          routes.map((r) => (
+            <li class="card">
+              <h3>{r.from}</h3>
+              <p class="muted small">{r.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="contact-h">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Get in touch</span>
+        <h2 id="contact-h">Call, email, or send photos</h2>
+      </div>
+      <ul class="grid grid-3 contact" role="list">
+        <li>
+          <a class="card" href={`tel:${business.phoneE164}`} data-track="call" data-track-where="visit-contact">
+            <Icon name="phone" />
+            <h3>Call</h3>
+            <p class="muted small">The fastest way to check if an item is in stock or ask about a loan.</p>
+            <span class="link-arrow">{business.phone}</span>
+          </a>
+        </li>
+        <li>
+          <a class="card" href={`mailto:${business.email}`} data-track="email">
+            <Icon name="mail" />
+            <h3>Email</h3>
+            <p class="muted small">For anything that isn't urgent. We reply during store hours.</p>
+            <span class="link-arrow">{business.email}</span>
+          </a>
+        </li>
+        <li>
+          <a class="card" href="/get-an-offer/" data-track="offer-cta" data-track-where="visit-contact">
+            <Icon name="camera" />
+            <h3>Get an Offer</h3>
+            <p class="muted small">Send photos of the item you want to pawn or sell and we'll get back to you.</p>
+            <span class="link-arrow">Send photos</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <OfferBand />
+
+  <FacebookFeed
+    eyebrow="Follow along"
+    heading="Closures and new arrivals"
+    text="Holiday hours and surprise closures go up on Facebook as soon as we know. So does everything new in the case."
+  />
+</Base>
+
+<style>
+  .routes,
+  .contact {
+    list-style: none;
+    padding: 0;
+  }
+  .routes .card {
+    display: grid;
+    gap: var(--s-2);
+  }
+  .contact .card {
+    display: grid;
+    gap: var(--s-3);
+    height: 100%;
+    align-content: start;
+  }
+  .contact .card > :global(svg) {
+    color: var(--brass-deep);
+  }
+</style>

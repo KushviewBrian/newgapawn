@@ -1,0 +1,74 @@
+---
+/** Address, hours, map, and contact buttons, shared by Home and Visit. */
+import HoursTable from './HoursTable.astro';
+import MapBlock from './MapBlock.astro';
+import OpenBadge from './OpenBadge.astro';
+import Icon from './Icon.astro';
+import { business, mapsLinks } from '../data/site';
+
+interface Props {
+  headingLevel?: 'h1' | 'h2';
+  eyebrow?: string;
+}
+const { headingLevel = 'h2', eyebrow = 'Visit us' } = Astro.props;
+const H = headingLevel;
+---
+
+<section class="section" id="hours" aria-labelledby="visit-h">
+  <div class="container split">
+    <div class="info">
+      <span class="eyebrow">{eyebrow}</span>
+      <H id="visit-h" class="h2">
+        {business.address.street},<br />
+        {business.address.city}, {business.address.region}
+        {business.address.postalCode}
+      </H>
+      <OpenBadge />
+      <HoursTable heading="Store hours" />
+      <div class="btn-row btn-row--stack-sm">
+        <a class="btn btn--brass" href={`tel:${business.phoneE164}`} data-track="call" data-track-where="visit">
+          <Icon name="phone" />
+          {business.phone}
+        </a>
+        <a class="btn btn--outline" href={mapsLinks.google} data-directions={mapsLinks.apple} data-track="directions" data-track-where="visit" rel="noopener">
+          <Icon name="pin" /> Directions
+        </a>
+        {
+          business.textEnabled && (
+            <a class="btn btn--outline" href={`sms:${business.phoneE164}`} data-track="text" data-track-where="visit">
+              <Icon name="message" /> Text us
+            </a>
+          )
+        }
+        <a class="btn btn--outline" href={`mailto:${business.email}`} data-track="email">
+          <Icon name="mail" /> Email
+        </a>
+      </div>
+    </div>
+    <div class="map-col">
+      <MapBlock />
+      <p class="small muted">
+        On Villa Rica Highway (GA-61) in the New Georgia community, between Dallas and Villa Rica. Minutes from Hiram and
+        Douglasville.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .info {
+    display: grid;
+    gap: var(--s-4);
+    align-content: start;
+  }
+  .info :global(.hours) {
+    margin-top: var(--s-2);
+  }
+  .info .btn-row {
+    margin-top: var(--s-2);
+  }
+  .map-col {
+    display: grid;
+    gap: var(--s-3);
+  }
+</style>

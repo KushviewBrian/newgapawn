@@ -1,0 +1,85 @@
+---
+import Icon from './Icon.astro';
+import { services } from '../data/site';
+
+interface Props {
+  /** Leave out the page the visitor is already on. */
+  exclude?: string;
+  headingLevel?: 'h2' | 'h3';
+}
+const { exclude, headingLevel = 'h3' } = Astro.props;
+const items = services.filter((s) => s.key !== exclude);
+const H = headingLevel;
+---
+
+<div class="services-wrap">
+  <ul class:list={['services', `n${items.length}`]} role="list">
+    {
+      items.map((s) => (
+        <li>
+          <a class="card service" href={s.href}>
+            <span class="icon">
+              <Icon name={s.icon} />
+            </span>
+            <H class="h3">{s.title}</H>
+            <p>{s.blurb}</p>
+            <span class="link-arrow">{s.cta}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  /* Cards reflow by the width of their own container, not the viewport. */
+  .services-wrap {
+    container-type: inline-size;
+  }
+  .services {
+    display: grid;
+    gap: var(--s-5);
+    list-style: none;
+    padding: 0;
+  }
+  @container (min-width: 520px) {
+    .services {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @container (min-width: 900px) {
+    .services.n3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .services.n4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .service {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    height: 100%;
+    padding: var(--s-5);
+  }
+  .icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--paper-2);
+    color: var(--brass-deep);
+  }
+  .service p {
+    color: var(--muted);
+    font-size: var(--text-small);
+    flex: 1;
+  }
+  .service .link-arrow {
+    color: var(--brass-deep);
+  }
+  .service:hover .link-arrow {
+    color: var(--ink);
+  }
+</style>

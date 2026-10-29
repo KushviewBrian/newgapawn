@@ -1,0 +1,80 @@
+---
+/** Accessible FAQ list using native <details>; works without JavaScript. */
+interface Props {
+  items: { q: string; a: string }[];
+  heading?: string;
+  id?: string;
+}
+const { items, heading = 'Common questions', id = 'faq' } = Astro.props;
+---
+
+<section class="section" aria-labelledby={`${id}-h`} id={id}>
+  <div class="container narrow">
+    <h2 id={`${id}-h`}>{heading}</h2>
+    <div class="list">
+      {
+        items.map((item) => (
+          <details>
+            <summary>
+              <span>{item.q}</span>
+            </summary>
+            <div class="answer" set:html={item.a} />
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .narrow {
+    max-width: calc(820px + 2 * var(--gutter));
+  }
+  .list {
+    margin-top: var(--s-6);
+    border-top: var(--hairline);
+  }
+  details {
+    border-bottom: var(--hairline);
+  }
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    min-height: 56px;
+    padding: var(--s-4) 0;
+    font-weight: 600;
+    font-size: 1.0625rem;
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::after {
+    content: '';
+    flex: none;
+    width: 10px;
+    height: 10px;
+    margin-right: 6px;
+    border-right: 2px solid var(--brass-deep);
+    border-bottom: 2px solid var(--brass-deep);
+    transform: rotate(45deg) translateY(-3px);
+    transition: transform var(--ease);
+  }
+  details[open] summary::after {
+    transform: rotate(-135deg) translateY(-3px);
+  }
+  summary:hover span {
+    color: var(--brass-deep);
+  }
+  .answer {
+    padding: 0 0 var(--s-5);
+    max-width: var(--measure);
+    color: var(--muted);
+  }
+  .answer :global(p + p) {
+    margin-top: 0.75em;
+  }
+</style>

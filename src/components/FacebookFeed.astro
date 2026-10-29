@@ -1,0 +1,164 @@
+---
+/**
+ * The shop's public Facebook Page via Meta's Page Plugin (iframe version, no
+ * Facebook SDK). The frame is only created when the section nears the
+ * viewport, so it costs nothing on first load. Without JavaScript, or when a
+ * browser blocks Facebook frames, visitors get a link to the Page instead.
+ */
+import Icon from './Icon.astro';
+import { business } from '../data/site';
+
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  text?: string;
+  headingId?: string;
+}
+const {
+  eyebrow = 'Latest from the shop',
+  heading = 'New in the case this week',
+  text = 'New arrivals, deals, and closures go up on our Facebook page first. You can scroll through them here without a Facebook account.',
+  headingId = 'feed-h',
+} = Astro.props;
+---
+
+<section class="section feed" aria-labelledby={headingId}>
+  <div class="container split split--even">
+    <div class="copy">
+      <span class="eyebrow">{eyebrow}</span>
+      <h2 id={headingId}>{heading}</h2>
+      <p class="lede">{text}</p>
+      <ul class="checks small">
+        <li>Guns are in-store pickup only. Call to check what's still available.</li>
+        <li>Want something you see? Call and we'll tell you if it's still here.</li>
+      </ul>
+      <div class="btn-row">
+        <a class="btn btn--outline" href={business.links.facebook} rel="noopener" data-track="facebook">
+          <Icon name="facebook" /> Follow us on Facebook
+        </a>
+        <a class="btn btn--ink" href={`tel:${business.phoneE164}`} data-track="call" data-track-where="feed">
+          <Icon name="phone" /> Call about an item
+        </a>
+      </div>
+    </div>
+
+    <div class="frame" data-fb-frame data-href={business.links.facebook}>
+      <a class="fallback" href={business.links.facebook} rel="noopener">
+        <Icon name="facebook" size={32} />
+        <strong>See our latest posts on Facebook</strong>
+        <span>New arrivals, deals, and store closures</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  function mount(frame: HTMLElement) {
+    const width = Math.max(180, Math.min(500, Math.floor(frame.clientWidth)));
+    const height = Math.max(70, Math.floor(frame.clientHeight));
+    const params = new URLSearchParams({
+      href: frame.dataset.href!,
+      tabs: 'timeline',
+      width: String(width),
+      height: String(height),
+      small_header: 'true',
+      adapt_container_width: 'true',
+      hide_cover: 'false',
+      show_facepile: 'false',
+    });
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.facebook.com/plugins/page.php?${params}`;
+    iframe.title = 'New Georgia Pawn on Facebook';
+    iframe.width = String(width);
+    iframe.height = String(height);
+    iframe.loading = 'lazy';
+    iframe.allow = 'encrypted-media; clipboard-write; web-share';
+    frame.querySelector('iframe')?.remove();
+    frame.append(iframe);
+    frame.dataset.width = String(width);
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-fb-frame]').forEach((frame) => {
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          mount(frame);
+          // The plugin only sizes itself on load; re-mount after a real width change (e.g. rotation).
+          let last = frame.clientWidth;
+          new ResizeObserver(() => {
+            const w = frame.clientWidth;
+            if (Math.abs(w - last) > 40 && (w < 500 || last < 500)) {
+              last = w;
+              mount(frame);
+            }
+          }).observe(frame);
+        }
+      },
+      { rootMargin: '600px 0px' },
+    );
+    io.observe(frame);
+  });
+</script>
+
+<style>
+  .copy {
+    display: grid;
+    gap: var(--s-4);
+    align-content: start;
+  }
+  .copy .btn-row {
+    margin-top: var(--s-2);
+  }
+  @media (min-width: 1024px) {
+    .copy {
+      position: sticky;
+      top: calc(var(--header-h) + var(--s-6));
+    }
+  }
+  .frame {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    height: 640px;
+    margin-inline: auto;
+    border: var(--hairline);
+    border-radius: var(--radius);
+    background: var(--card);
+    overflow: hidden;
+  }
+  .frame :global(iframe) {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: transparent;
+  }
+  .fallback {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: var(--s-2);
+    padding: var(--s-6);
+    text-align: center;
+    text-decoration: none;
+    color: var(--ink);
+    background: repeating-linear-gradient(135deg, var(--paper) 0 14px, var(--paper-2) 14px 28px);
+  }
+  .fallback :global(svg) {
+    color: #1877f2;
+  }
+  .fallback span {
+    color: var(--muted);
+    font-size: var(--text-small);
+  }
+  @media (max-width: 1023px) {
+    .frame {
+      height: 560px;
+    }
+  }
+</style>

@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import ServiceCards from '../components/ServiceCards.astro';
+import Icon from '../components/Icon.astro';
+import { business } from '../data/site';
+---
+
+<Base title="Page not found" description="That page isn't here. Find pawn loans, gold buying, firearms, and store hours at New Georgia Pawn." noindex>
+  <section class="section">
+    <div class="container stack-lg">
+      <div class="stack head">
+        <span class="eyebrow">404</span>
+        <h1 class="h2">That page isn't on the shelf.</h1>
+        <p class="lede">It may have moved or sold. Here's where most people are headed:</p>
+      </div>
+      <ServiceCards />
+      <div class="btn-row">
+        <a class="btn btn--ink" href="/">Home</a>
+        <a class="btn btn--outline" href="/visit/">Hours & directions</a>
+        <a class="btn btn--outline" href={`tel:${business.phoneE164}`} data-track="call" data-track-where="404">
+          <Icon name="phone" /> Call {business.phone}
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head {
+    max-width: 640px;
+  }
+</style>

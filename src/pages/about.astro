@@ -1,0 +1,118 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Reviews from '../components/Reviews.astro';
+import ServiceCards from '../components/ServiceCards.astro';
+import Icon from '../components/Icon.astro';
+import { business, reviewUrl } from '../data/site';
+import { getPhoto, photoAlt } from '../lib/photos';
+
+const title = 'About Us & Reviews';
+const description =
+  'New Georgia Pawn is a locally owned pawn shop on Villa Rica Highway in Dallas, GA, open since October 2024. Read what our customers say.';
+const crumbs = [{ name: 'About & Reviews', path: '/about/' }];
+const owner = getPhoto('owner');
+---
+
+<Base title={title} description={description} og="about" breadcrumbs={crumbs} businessSchema>
+  <PageHero
+    eyebrow="About us"
+    title="A neighborhood pawn shop, run by people who live here"
+    lede="New Georgia Pawn opened on Villa Rica Highway in October 2024. We're locally owned, we deal fairly, and we'd like to be the shop you send your friends to."
+    crumbs={crumbs}
+  />
+
+  <section class="section" aria-labelledby="story-h">
+    <div class="container split">
+      <div class="prose">
+        <h2 id="story-h" class="mt-0">Our story</h2>
+        <p>
+          We opened New Georgia Pawn in the New Georgia community between Dallas and Villa Rica because this side of Paulding County
+          deserved a pawn shop that treats people right: fair offers, straight answers, and no pressure.
+        </p>
+        <p>
+          We make pawn loans on the things people own, buy gold and silver, and keep a case full of firearms. As a federally licensed
+          dealer we also handle FFL transfers for guns bought online or from private sellers.
+        </p>
+        <p>
+          Whether you need cash this week, want to sell an old ring, or are looking for your next rifle, come by and say hello.
+        </p>
+      </div>
+      <aside class="card values" aria-label="How we do business">
+        <h3>How we do business</h3>
+        <ul class="checks">
+          <li>Every offer explained, in person</li>
+          <li>Gold tested and weighed where you can see it</li>
+          <li>Loan terms in writing on every pawn ticket</li>
+          <li>Licensed pawnbroker and federal firearms licensee</li>
+        </ul>
+        <p class="small muted">FFL {business.ffl.number} · {business.legalName}</p>
+      </aside>
+    </div>
+    {
+      owner && (
+        <div class="container owner">
+          <Picture formats={['avif', 'webp']} src={owner} alt={photoAlt.owner} widths={[400, 800]} sizes="(min-width: 768px) 400px, 100vw" />
+        </div>
+      )
+    }
+  </section>
+
+  <Reviews id="reviews" limit={12} />
+
+  <section class="section" aria-labelledby="review-cta-h">
+    <div class="container narrow center stack">
+      <span class="eyebrow">Been in to see us?</span>
+      <h2 id="review-cta-h">Tell your neighbors how it went</h2>
+      <p class="muted">Reviews help other people in Paulding County find a shop they can trust. It takes about a minute.</p>
+      <div class="btn-row center-row">
+        {
+          reviewUrl ? (
+            <a class="btn btn--ink" href="/review" data-track="review">
+              <Icon name="star" /> Leave a Google review
+            </a>
+          ) : (
+            <a class="btn btn--ink" href={business.links.gunmade} rel="noopener">
+              <Icon name="star" /> Review us on Gun Made
+            </a>
+          )
+        }
+        <a class="btn btn--outline" href={business.links.facebook} rel="noopener">
+          <Icon name="facebook" /> Recommend us on Facebook
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--band" aria-labelledby="help-h">
+    <div class="container">
+      <h2 id="help-h" class="section-head">How we can help</h2>
+      <ServiceCards />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .values {
+    display: grid;
+    gap: var(--s-4);
+    align-content: start;
+  }
+  .owner {
+    margin-top: var(--s-7);
+  }
+  .owner :global(img) {
+    max-width: 400px;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+  .narrow {
+    max-width: calc(680px + 2 * var(--gutter));
+  }
+  .center-row {
+    justify-content: center;
+    margin-top: var(--s-3);
+  }
+</style>

@@ -1,0 +1,246 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Faq from '../components/Faq.astro';
+import { business } from '../data/site';
+import { serviceSchema } from '../lib/schema';
+
+const title = 'FFL Transfers in Dallas, GA';
+const description =
+  'FFL transfers in Dallas, GA for online and private-party gun sales. Ship to us, we call when it arrives, and you pick it up after the background check.';
+const crumbs = [{ name: 'FFL Transfers', path: '/ffl-transfers/' }];
+
+const fee = business.fflTransferFee;
+const turnaround = business.fflTurnaround;
+
+const fflText = [
+  business.ffl.licenseName,
+  `FFL: ${business.ffl.number}`,
+  business.address.street,
+  `${business.address.city}, ${business.address.region} ${business.address.postalCode}`,
+  `Phone: ${business.phone}`,
+  `Email: ${business.email}`,
+].join('\n');
+
+const copyRequest = `mailto:${business.email}?subject=${encodeURIComponent('FFL copy request')}&body=${encodeURIComponent(
+  'Hi, please email a signed copy of your FFL to the seller below.\n\nSeller or website:\nSeller email:\nMy name:\nMy phone:\n',
+)}`;
+
+const faq = [
+  {
+    q: 'How much is a transfer?',
+    a: fee
+      ? `<p>${fee} per firearm. Call us about multiple guns on one order.</p>`
+      : `<p>Call us at <a href="tel:${business.phoneE164}">${business.phone}</a> for the current fee, including pricing for multiple guns on one order.</p>`,
+  },
+  {
+    q: 'Can I transfer a gun from a private seller?',
+    a: "<p>Yes. Private sellers can ship to us or bring the firearm in. Both of you can meet us at the counter and we'll handle it as a transfer.</p>",
+  },
+  {
+    q: 'What happens if my background check is delayed or denied?',
+    a: "<p>A delay means the check needs more time; we'll call you as soon as it clears. If it's denied, we can't release the firearm to you. Call us to talk through the options for returning it to the seller.</p>",
+  },
+  {
+    q: 'How long will you hold my gun after it arrives?',
+    a: "<p>Call us when you get our arrival call and we'll set a pickup time. Please plan to pick up promptly; storage space for transfers is limited.</p>",
+  },
+  {
+    q: 'Do you accept handgun transfers from out of state?',
+    a: '<p>Yes. A licensed dealer in any state can ship to us. Private sellers in another state must ship through their own local FFL.</p>',
+  },
+];
+---
+
+<Base
+  title={title}
+  description={description}
+  og="ffl-transfers"
+  breadcrumbs={crumbs}
+  schema={[serviceSchema(Astro.site!, { name: 'FFL transfers', path: '/ffl-transfers/', description })]}
+>
+  <PageHero
+    eyebrow="FFL transfers"
+    title="Bought a gun online? Ship it here."
+    lede="We receive firearms from online sellers, dealers, and private parties, then complete the federal paperwork and background check so you can take it home."
+    crumbs={crumbs}
+  >
+    <dl class="facts">
+      <div>
+        <dt>Transfer fee</dt>
+        <dd>{fee ?? 'Call for current fee'}</dd>
+      </div>
+      <div>
+        <dt>Turnaround</dt>
+        <dd>{turnaround ?? 'We call the day it arrives'}</dd>
+      </div>
+    </dl>
+    <div class="btn-row btn-row--stack-sm">
+      <a class="btn btn--brass" href={`tel:${business.phoneE164}`} data-track="call" data-track-where="ffl-hero">
+        <Icon name="phone" /> Call {business.phone}
+      </a>
+      <a class="btn btn--outline" href="#ffl-details">Copy our FFL details</a>
+    </div>
+
+    <div slot="aside" class="card ffl-card" id="ffl-details">
+      <div class="ffl-head">
+        <span class="eyebrow">Ship-to details for checkout</span>
+        <button class="copy-btn" type="button" data-copy aria-describedby="copy-status">
+          <Icon name="copy" size={18} /> <span>Copy</span>
+        </button>
+      </div>
+      <pre data-copy-source>{fflText}</pre>
+      <p id="copy-status" class="small muted" aria-live="polite">
+        Paste this into the seller's FFL field. Need our signed license copy?
+        <a href={copyRequest}>Request it by email</a>.
+      </p>
+    </div>
+  </PageHero>
+
+  <section class="section" aria-labelledby="steps-h">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Step by step</span>
+        <h2 id="steps-h">From checkout to pickup</h2>
+      </div>
+      <ol class="steps steps--row steps--5">
+        <li>
+          <div>
+            <h3>Choose us at checkout</h3>
+            <p class="muted small">Give the seller our FFL details above. Most sites let you search for {business.ffl.licenseName}.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Seller ships to us</h3>
+            <p class="muted small">The seller sends the firearm to our licensed address. Not to your home.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>We call when it arrives</h3>
+            <p class="muted small">We log it in and call you to set up pickup.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Bring your ID</h3>
+            <p class="muted small">Fill out ATF Form 4473 at the counter and we run the background check.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Take it home</h3>
+            <p class="muted small">Pay the transfer fee once the check clears, and you're done.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--band" aria-labelledby="bring-h">
+    <div class="container split split--center">
+      <div class="stack">
+        <span class="eyebrow">What to bring</span>
+        <h2 id="bring-h">Pickup checklist</h2>
+        <p class="muted">
+          21 or older for handguns, 18 or older for rifles and shotguns. Read the full
+          <a href="/guides/what-to-bring-for-an-ffl-transfer/">FFL transfer guide</a> before you come in.
+        </p>
+      </div>
+      <ul class="checks">
+        <li>Valid government-issued photo ID with your current address</li>
+        <li>Your order number or seller's name</li>
+        <li>A qualifying Georgia Weapons Carry License, if you have one</li>
+        <li>Payment for the transfer fee</li>
+      </ul>
+    </div>
+  </section>
+
+  <Faq items={faq} />
+</Base>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const text = btn.closest('.ffl-card')!.querySelector('[data-copy-source]')!.textContent!;
+      const label = btn.querySelector('span')!;
+      try {
+        await navigator.clipboard.writeText(text);
+        label.textContent = 'Copied';
+      } catch {
+        const range = document.createRange();
+        range.selectNodeContents(btn.closest('.ffl-card')!.querySelector('[data-copy-source]')!);
+        getSelection()?.removeAllRanges();
+        getSelection()?.addRange(range);
+        label.textContent = 'Selected, press copy';
+      }
+      setTimeout(() => (label.textContent = 'Copy'), 2500);
+    });
+  });
+</script>
+
+<style>
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-5);
+    margin-top: var(--s-2);
+  }
+  .facts dt {
+    font-size: var(--text-label);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .facts dd {
+    font-family: var(--font-serif);
+    font-size: 1.375rem;
+    font-weight: 600;
+  }
+  .ffl-card {
+    display: grid;
+    gap: var(--s-3);
+    scroll-margin-top: calc(var(--header-h) + var(--s-5));
+  }
+  .ffl-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+  }
+  pre {
+    padding: var(--s-4);
+    background: var(--paper-2);
+    border: var(--hairline);
+    border-radius: var(--radius);
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    user-select: all;
+  }
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    padding: 0 var(--s-4);
+    background: var(--ink);
+    color: var(--paper);
+    border: 0;
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  .copy-btn:hover {
+    background: #000;
+  }
+  @media (min-width: 1024px) {
+    .steps--5 {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+</style>

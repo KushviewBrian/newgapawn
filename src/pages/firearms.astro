@@ -1,0 +1,177 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Faq from '../components/Faq.astro';
+import FacebookFeed from '../components/FacebookFeed.astro';
+import { business } from '../data/site';
+import { getPhoto, photoAlt } from '../lib/photos';
+import { serviceSchema } from '../lib/schema';
+
+const title = 'Gun Shop in Dallas, GA';
+const description =
+  'Buy, sell, and trade handguns, rifles, and shotguns at New Georgia Pawn in Dallas, GA. Licensed FFL dealer. Trades accepted for guns, gold, and silver.';
+const crumbs = [{ name: 'Firearms', path: '/firearms/' }];
+
+const faq = [
+  {
+    q: 'Can I buy a gun online from you and have it shipped?',
+    a: '<p>No. Every firearm sale happens in the store, in person, with the federal paperwork and background check. If you bought a gun from someone else online, we can receive it for you as an <a href="/ffl-transfers/">FFL transfer</a>.</p>',
+  },
+  {
+    q: 'Do you buy guns?',
+    a: "<p>Yes. Bring the firearm unloaded and cased, along with your photo ID. We'll look it over and make you an offer, or you can trade it toward something in the case.</p>",
+  },
+  {
+    q: 'Is a gun from the Facebook post still available?',
+    a: "<p>Stock moves fast. Call us at <a href=\"tel:+17704430328\">(770) 443-0328</a> and we'll check.</p>",
+  },
+  {
+    q: 'Do I need a permit to buy a gun in Georgia?',
+    a: "<p>Georgia doesn't require a permit to purchase. Federal law still requires the Form 4473 and a background check at the counter, unless you show a qualifying carry license that ATF accepts in place of the check.</p>",
+  },
+];
+---
+
+<Base
+  title={title}
+  description={description}
+  og="firearms"
+  breadcrumbs={crumbs}
+  schema={[serviceSchema(Astro.site!, { name: 'Firearm sales and trades', path: '/firearms/', description })]}
+>
+  <PageHero
+    eyebrow="Firearms"
+    title="Buy, sell, and trade with a licensed dealer"
+    lede="Handguns, rifles, and shotguns, with new arrivals all the time. We buy guns outright and take trades for guns, gold, or silver."
+    crumbs={crumbs}
+    photo={getPhoto('gun-wall')}
+    photoAlt={photoAlt['gun-wall']}
+  >
+    <div class="btn-row btn-row--stack-sm">
+      <a class="btn btn--brass" href={`tel:${business.phoneE164}`} data-track="call" data-track-where="firearms-hero">
+        <Icon name="phone" /> Call to check stock
+      </a>
+      <a class="btn btn--outline" href="/ffl-transfers/">FFL transfers</a>
+    </div>
+    <p class="small muted">Firearms are sold in store only, subject to a federal background check. FFL {business.ffl.number}.</p>
+  </PageHero>
+
+  <section class="section" aria-labelledby="ways-h">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Three ways to deal</span>
+        <h2 id="ways-h">Buy it, sell it, or trade it</h2>
+      </div>
+      <ul class="grid grid-3 ways" role="list">
+        <li class="card">
+          <span class="icon"><Icon name="shield" /></span>
+          <h3>Buy</h3>
+          <p class="muted small">
+            Quality used handguns, rifles, and shotguns at fair prices. See the latest arrivals below, then come in to look them over.
+          </p>
+        </li>
+        <li class="card">
+          <span class="icon"><Icon name="cash" /></span>
+          <h3>Sell</h3>
+          <p class="muted small">
+            Bring your firearm unloaded and cased with your photo ID. We'll make an offer and pay cash the same day if you take it.
+          </p>
+        </li>
+        <li class="card">
+          <span class="icon"><Icon name="handshake" /></span>
+          <h3>Trade</h3>
+          <p class="muted small">Trade toward something in the case. We accept guns, gold, and silver in trade.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--band" aria-labelledby="rules-h">
+    <div class="container split">
+      <div class="stack">
+        <span class="eyebrow">Buying from a dealer</span>
+        <h2 id="rules-h">The federal rules, in plain words</h2>
+        <p class="muted">
+          Every firearm we sell goes through the same federal process. It usually takes a few minutes at the counter.
+        </p>
+      </div>
+      <ol class="steps">
+        <li>
+          <div>
+            <h3>Show a valid photo ID</h3>
+            <p class="muted">A government-issued photo ID with your current address.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Fill out ATF Form 4473</h3>
+            <p class="muted">The federal firearms transaction record. We'll walk you through it.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Pass the background check</h3>
+            <p class="muted">
+              We run the federal NICS check. A qualifying Georgia Weapons Carry License can stand in for the check where ATF allows it.
+            </p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Take it home</h3>
+            <p class="muted">You must be 21 or older for a handgun and 18 or older for a rifle or shotgun from a dealer.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <FacebookFeed
+    eyebrow="Recent arrivals"
+    heading="What's new in the case"
+    text="We post new guns on our Facebook page as they come in. Scroll through them here, then call to check what's still available."
+  />
+
+  <section class="section section--band" aria-labelledby="ffl-h">
+    <div class="container split split--center">
+      <div class="stack">
+        <span class="eyebrow">Bought a gun somewhere else?</span>
+        <h2 id="ffl-h">We handle FFL transfers</h2>
+        <p class="muted">
+          Have an online seller or a private seller ship to us. We call you when it arrives, run the paperwork and the check, and you
+          take it home.
+        </p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn--ink" href="/ffl-transfers/">Transfer steps and fee</a>
+        <a class="btn btn--outline" href={business.links.buya} rel="noopener">
+          Our listings on Buya <Icon name="external" size={16} />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Faq items={faq} />
+</Base>
+
+<style>
+  .ways {
+    list-style: none;
+    padding: 0;
+  }
+  .ways .card {
+    display: grid;
+    gap: var(--s-3);
+    align-content: start;
+  }
+  .icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--paper-2);
+    color: var(--brass-deep);
+  }
+</style>

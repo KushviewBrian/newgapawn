@@ -1,0 +1,56 @@
+---
+import Guide from '../../layouts/Guide.astro';
+import { business } from '../../data/site';
+---
+
+<Guide slug="what-to-bring-for-an-ffl-transfer">
+  <p>
+    When you buy a gun online or from someone out of state, it has to be shipped to a federally licensed dealer (an FFL) instead of to
+    your home. The dealer then completes the same federal steps as any gun sale before handing it to you. Here's what to have ready so
+    pickup takes minutes, not an afternoon.
+  </p>
+
+  <h2>Before the gun ships</h2>
+  <ul>
+    <li><strong>Pick your FFL at checkout.</strong> Give the seller our details from the <a href="/ffl-transfers/#ffl-details">FFL Transfers page</a>.</li>
+    <li><strong>Check the seller has our license.</strong> Many sellers need a copy of our FFL on file; we'll email it to them on request.</li>
+    <li><strong>Make sure the gun is legal for you to own in Georgia</strong> and that you meet the age rule below.</li>
+  </ul>
+
+  <h2>What to bring at pickup</h2>
+  <ul>
+    <li>
+      <strong>A valid government-issued photo ID</strong> showing your name, date of birth, and current address. A Georgia driver's
+      license or ID card is ideal. If the address on your ID isn't current, bring an official document that shows it, such as a vehicle
+      registration or tax bill, and call ahead to check.
+    </li>
+    <li><strong>Your order number</strong> or the seller's name, so we can match the package to you.</li>
+    <li><strong>Your Georgia Weapons Carry License</strong>, if you have one. Some carry licenses can be used in place of the background check, as ATF allows.</li>
+    <li><strong>Payment</strong> for the transfer fee.</li>
+  </ul>
+
+  <h2>At the counter</h2>
+  <ol>
+    <li>You fill out <strong>ATF Form 4473</strong>, the federal firearms transaction record. Answer every question truthfully and completely.</li>
+    <li>We run the <strong>NICS background check</strong>, unless a qualifying permit applies.</li>
+    <li>Once you're approved, you pay the fee and take the gun home.</li>
+  </ol>
+
+  <h2>Age rules</h2>
+  <p>
+    Federal law requires you to be <strong>21 or older for a handgun</strong> and <strong>18 or older for a rifle or shotgun</strong> when
+    buying from or through a dealer.
+  </p>
+
+  <h2>If the check is delayed or denied</h2>
+  <p>
+    A <strong>delay</strong> means NICS needs more time to review. We'll call you when we have an answer. A <strong>denial</strong>
+    means we can't legally hand over the firearm; we'll talk through returning it to the seller. If you believe a denial is a mistake,
+    you can appeal through the FBI.
+  </p>
+
+  <h2>Questions?</h2>
+  <p>
+    Call us at <a href={`tel:${business.phoneE164}`}>{business.phone}</a> before you order and we'll walk you through it.
+  </p>
+</Guide>

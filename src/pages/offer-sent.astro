@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { business } from '../data/site';
+---
+
+<Base title="Offer request sent" description="Thanks for sending your item to New Georgia Pawn. We’ll call you back during store hours with a starting offer." noindex>
+  <section class="section">
+    <div class="container narrow center stack-lg">
+      <span class="tick" aria-hidden="true"><Icon name="check" size={32} /></span>
+      <h1 class="h2">Got it. We'll be in touch.</h1>
+      <p class="lede">
+        Your photos and details are on their way to the shop. We'll call you back during store hours, usually the same business day.
+      </p>
+      <p class="muted">Need an answer sooner? Give us a call.</p>
+      <div class="btn-row row">
+        <a class="btn btn--brass" href={`tel:${business.phoneE164}`} data-track="call" data-track-where="offer-sent">
+          <Icon name="phone" /> {business.phone}
+        </a>
+        <a class="btn btn--outline" href="/">Back to home</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .narrow {
+    max-width: calc(620px + 2 * var(--gutter));
+  }
+  .tick {
+    display: inline-grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--open-bg);
+    color: var(--open);
+  }
+  .lede {
+    margin-inline: auto;
+  }
+  .row {
+    justify-content: center;
+  }
+</style>

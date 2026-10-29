@@ -1,0 +1,215 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import OpenBadge from '../components/OpenBadge.astro';
+import TrustStrip from '../components/TrustStrip.astro';
+import ServiceCards from '../components/ServiceCards.astro';
+import OfferBand from '../components/OfferBand.astro';
+import FacebookFeed from '../components/FacebookFeed.astro';
+import Reviews from '../components/Reviews.astro';
+import VisitBlock from '../components/VisitBlock.astro';
+import { business, mapsLinks } from '../data/site';
+import { getPhoto, photoAlt } from '../lib/photos';
+import { DAY_NAMES, DISPLAY_ORDER, formatSpan } from '../lib/hours';
+import { shop } from '../lib/shop';
+
+const storefront = getPhoto('storefront');
+---
+
+<Base
+  title="Pawn Shop in Dallas, GA | New Georgia Pawn"
+  description="Locally owned pawn shop on Villa Rica Hwy in Dallas, GA. Pawn loans, cash for gold and silver, guns bought, sold and traded, and FFL transfers."
+  businessSchema
+>
+  <section class="hero">
+    <div class="container split split--center">
+      <div class="copy">
+        <div class="meta">
+          <OpenBadge />
+          <span class="eyebrow tagline">{business.tagline}</span>
+        </div>
+        <h1>Fair cash and honest deals on Villa Rica Highway.</h1>
+        <p class="lede">
+          Pawn loans, gold and silver buying, and a full case of firearms, with FFL transfers welcome. Locally owned in
+          Dallas, Georgia.
+        </p>
+        <div class="btn-row btn-row--stack-sm">
+          <a class="btn btn--ink" href="/get-an-offer/" data-track="offer-cta" data-track-where="hero">Get an Offer</a>
+          <a class="btn btn--brass" href={`tel:${business.phoneE164}`} data-track="call" data-track-where="hero">
+            <Icon name="phone" /> Call the shop
+          </a>
+          <a class="btn btn--outline" href={mapsLinks.google} data-directions={mapsLinks.apple} data-track="directions" data-track-where="hero" rel="noopener">
+            <Icon name="pin" /> Directions
+          </a>
+        </div>
+      </div>
+
+      {
+        storefront ? (
+          <div class="photo">
+            <Picture formats={['avif', 'webp']}
+              src={storefront}
+              alt={photoAlt.storefront}
+              widths={[480, 800, 1200]}
+              sizes="(min-width: 1024px) 460px, 100vw"
+              loading="eager"
+              fetchpriority="high"
+            />
+          </div>
+        ) : (
+          <aside class="sign" aria-label="Shop at a glance">
+            <span class="sign-diamond" aria-hidden="true" />
+            <p class="sign-kicker">Est. 2024 · Dallas, Georgia</p>
+            <p class="sign-name">New Georgia Pawn</p>
+            <p class="sign-sub">Pawn · Gold & Silver · Firearms</p>
+            <dl class="sign-hours">
+              {DISPLAY_ORDER.map((d) => (
+                <div>
+                  <dt>{DAY_NAMES[d].slice(0, 3)}</dt>
+                  <dd>{formatSpan(shop.hours[d], { compact: true })}</dd>
+                </div>
+              ))}
+            </dl>
+            <p class="sign-addr">
+              {business.address.street}
+              <br />
+              <a href={`tel:${business.phoneE164}`} data-track="call" data-track-where="hero-sign">
+                {business.phone}
+              </a>
+            </p>
+          </aside>
+        )
+      }
+    </div>
+  </section>
+
+  <TrustStrip />
+
+  <section class="section" aria-labelledby="services-h">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">What we do</span>
+        <h2 id="services-h">Four ways we can help today</h2>
+      </div>
+      <ServiceCards />
+    </div>
+  </section>
+
+  <OfferBand />
+
+  <FacebookFeed />
+
+  <Reviews />
+
+  <VisitBlock />
+</Base>
+
+<style>
+  .hero {
+    padding-block: var(--s-7) var(--section-y);
+  }
+  .copy {
+    display: grid;
+    gap: var(--s-5);
+  }
+  /* Badge and tagline stack, so the badge filling in never reflows the hero. */
+  .meta {
+    display: grid;
+    justify-items: start;
+    gap: var(--s-3);
+  }
+  .tagline {
+    color: var(--muted);
+  }
+  .copy .btn-row {
+    margin-top: var(--s-2);
+  }
+  .photo :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+
+  /* Photo-free hero panel styled like a painted shop sign. */
+  .sign {
+    position: relative;
+    padding: var(--s-7) var(--s-6) var(--s-6);
+    background: var(--charcoal);
+    color: var(--on-dark);
+    border-radius: var(--radius);
+    text-align: center;
+    box-shadow:
+      inset 0 0 0 6px var(--charcoal),
+      inset 0 0 0 7px color-mix(in srgb, var(--brass) 70%, transparent);
+  }
+  .sign-diamond {
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    width: 18px;
+    height: 18px;
+    background: var(--brass);
+    transform: translateX(-50%) rotate(45deg);
+    box-shadow: 0 0 0 4px var(--paper);
+  }
+  .sign-kicker {
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brass-light);
+    font-weight: 600;
+  }
+  .sign-name {
+    margin-top: var(--s-3);
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: clamp(2rem, 1.6rem + 1.6vw, 2.75rem);
+    line-height: 1.05;
+  }
+  .sign-sub {
+    margin-top: var(--s-2);
+    font-size: 0.9375rem;
+    color: var(--on-dark-muted);
+  }
+  .sign-hours {
+    display: grid;
+    gap: 6px;
+    max-width: 300px;
+    margin: var(--s-5) auto 0;
+    padding-top: var(--s-5);
+    border-top: 1px solid rgb(255 255 255 / 0.14);
+    font-size: 0.9375rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .sign-hours div {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--s-4);
+  }
+  .sign-hours dt {
+    color: var(--on-dark-muted);
+  }
+  .sign-addr {
+    margin-top: var(--s-5);
+    padding-top: var(--s-4);
+    border-top: 1px solid rgb(255 255 255 / 0.14);
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+  .sign-addr a {
+    color: var(--brass-light);
+    font-weight: 600;
+    font-size: 1.125rem;
+    text-decoration: none;
+  }
+  .sign-addr a:hover {
+    text-decoration: underline;
+  }
+  @media (max-width: 1023px) {
+    .sign {
+      display: none;
+    }
+  }
+</style>

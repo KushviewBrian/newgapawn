@@ -1,0 +1,52 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import { guides } from '../../data/guides';
+
+const crumbs = [{ name: 'Guides', path: '/guides/' }];
+---
+
+<Base
+  title="Guides"
+  description="Plain-English guides from New Georgia Pawn: how pawn loans work in Georgia, how gold is priced when you sell, and what to bring for an FFL transfer."
+  og="guides"
+  breadcrumbs={crumbs}
+>
+  <PageHero
+    eyebrow="Guides"
+    title="Straight answers before you come in"
+    lede="Short, plain-English guides to the questions we hear most at the counter."
+    crumbs={crumbs}
+  />
+  <section class="section">
+    <div class="container">
+      <ul class="grid grid-3 list" role="list">
+        {
+          guides.map((g) => (
+            <li>
+              <a class="card guide" href={`/guides/${g.slug}/`}>
+                <span class="eyebrow">{g.readTime}</span>
+                <h2 class="h3">{g.title}</h2>
+                <p class="muted small">{g.description}</p>
+                <span class="link-arrow">Read the guide</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .list {
+    list-style: none;
+    padding: 0;
+  }
+  .guide {
+    display: grid;
+    gap: var(--s-3);
+    height: 100%;
+    align-content: start;
+  }
+</style>

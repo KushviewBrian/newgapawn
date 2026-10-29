@@ -1,0 +1,60 @@
+/* Design tokens: the single source for color, type, spacing, radii, and
+   shadows. Every component reads these; see /styleguide/ for the full set. */
+
+:root {
+  /* Color */
+  --ink: #1c1c1a;
+  --paper: #faf8f3;
+  --paper-2: #f3f0e8;
+  --card: #fffefb;
+  --stone: #e8e4da;
+  --stone-strong: #d6d0c2;
+  --muted: #5f5b52;
+  --brass: #a8842c;
+  --brass-deep: #7a5f1c;
+  --brass-light: #d4b46a;
+  --charcoal: #24231f;
+  --on-dark: #f4f1ea;
+  --on-dark-muted: #bdb7aa;
+  --open: #2f5d3a;
+  --open-bg: #e3ede4;
+  --closed: #7b2d26;
+  --closed-bg: #f4e4e1;
+  --focus: #1d4ed8;
+
+  /* Type */
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --text-display: clamp(2.25rem, 1.6rem + 3vw, 3.75rem);
+  --text-h2: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
+  --text-h3: 1.25rem;
+  --text-body: clamp(1.0625rem, 1.03rem + 0.15vw, 1.125rem);
+  --text-small: 0.9375rem;
+  --text-label: 0.8125rem;
+  --measure: 65ch;
+
+  /* Spacing (4 px base) */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+  --section-y: clamp(var(--s-7), 6vw, var(--s-9));
+
+  /* Layout */
+  --container: 1120px;
+  --gutter: clamp(16px, 4vw, 32px);
+  --header-h: 72px;
+  --action-bar-h: 56px;
+
+  /* Shape and depth */
+  --radius: 6px;
+  --radius-lg: 10px;
+  --hairline: 1px solid var(--stone);
+  --shadow-hover: 0 1px 2px rgb(28 28 26 / 0.06), 0 8px 24px -8px rgb(28 28 26 / 0.18);
+  --ease: 150ms ease;
+}

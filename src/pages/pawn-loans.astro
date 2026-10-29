@@ -1,0 +1,169 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Faq from '../components/Faq.astro';
+import OfferBand from '../components/OfferBand.astro';
+import ServiceCards from '../components/ServiceCards.astro';
+import { business } from '../data/site';
+import { getPhoto, photoAlt } from '../lib/photos';
+import { serviceSchema } from '../lib/schema';
+
+const title = 'Pawn Loans in Dallas, GA';
+const description =
+  'Get a pawn loan in Dallas, GA with no credit check. Bring your item and ID, get an offer, and walk out with cash. Pick your item back up when you repay.';
+const crumbs = [{ name: 'Pawn Loans', path: '/pawn-loans/' }];
+
+const faq = [
+  {
+    q: 'Do you check my credit?',
+    a: "<p>No. A pawn loan is based on the item you bring in, not your credit. There's no credit check and nothing is reported to the credit bureaus.</p>",
+  },
+  {
+    q: 'What do I need to bring?',
+    a: "<p>The item and a valid government-issued photo ID, such as a driver's license. Bring chargers, cases, and accessories too, since complete items are worth more.</p>",
+  },
+  {
+    q: "What if I can't repay?",
+    a: "<p>Call us before the due date. You can usually extend by paying the fees due. If you decide not to repay, the item becomes the shop's and the loan is closed: no collections calls and no hit to your credit.</p>",
+  },
+  {
+    q: 'Can someone else pick up my item?',
+    a: '<p>Call us first. For your protection, we normally release an item only to the person on the pawn ticket, with their ID.</p>',
+  },
+  {
+    q: 'How much will you loan on my item?',
+    a: '<p>It depends on what the item is, its condition, and what it sells for today. The quickest way to find out is to bring it in, or <a href="/get-an-offer/?type=pawn">send us photos</a> for a starting offer.</p>',
+  },
+];
+---
+
+<Base
+  title={title}
+  description={description}
+  og="pawn-loans"
+  breadcrumbs={crumbs}
+  schema={[serviceSchema(Astro.site!, { name: 'Pawn loans', path: '/pawn-loans/', description })]}
+>
+  <PageHero
+    eyebrow="Pawn loans"
+    title="Cash today on the things you own"
+    lede="A pawn loan is a short-term loan backed by an item you leave with us. No credit check, no bank, no long application. Repay and the item is yours again."
+    crumbs={crumbs}
+    photo={getPhoto('counter')}
+    photoAlt={photoAlt.counter}
+  >
+    <div class="btn-row btn-row--stack-sm">
+      <a class="btn btn--ink" href="/get-an-offer/?type=pawn" data-track="offer-cta" data-track-where="pawn-hero">Get an Offer</a>
+      <a class="btn btn--brass" href={`tel:${business.phoneE164}`} data-track="call" data-track-where="pawn-hero">
+        <Icon name="phone" /> Call {business.phone}
+      </a>
+    </div>
+  </PageHero>
+
+  <section class="section" aria-labelledby="how-h">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">How it works</span>
+        <h2 id="how-h">Three steps, usually in one visit</h2>
+      </div>
+      <ol class="steps steps--row">
+        <li>
+          <div>
+            <h3>Bring the item and your ID</h3>
+            <p class="muted">Tools, jewelry, electronics, firearms, and more. Bring chargers and accessories if you have them.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Get an offer</h3>
+            <p class="muted">We look the item over, check what it's worth, and tell you how much we can loan. No obligation.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Walk out with cash</h3>
+            <p class="muted">Sign the pawn ticket and take the cash. Repay by the due date and pick your item back up.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--band" aria-labelledby="what-h">
+    <div class="container split">
+      <div class="stack-lg">
+        <div class="stack">
+          <span class="eyebrow">What we loan on</span>
+          <h2 id="what-h">If it has value, ask us</h2>
+          <p class="muted">These are the things we see most. If yours isn't on the list, call and ask.</p>
+        </div>
+        <ul class="checks two-col">
+          <li>Gold and silver jewelry</li>
+          <li>Coins and bullion</li>
+          <li>Handguns, rifles, and shotguns</li>
+          <li>Power tools and hand tools</li>
+          <li>TVs, game consoles, and audio gear</li>
+          <li>Laptops and tablets</li>
+          <li>Musical instruments</li>
+          <li>Lawn and outdoor equipment</li>
+        </ul>
+      </div>
+      <div class="card stack">
+        <h3>Short- or long-term, your call</h3>
+        <p class="muted">
+          Need cash for a week? Repay early and pick your item up. Need longer? Extend the loan by paying the fees due, as many times as
+          you need, and the item stays safe with us.
+        </p>
+        <h3>Paying off or extending</h3>
+        <p class="muted">
+          Your pawn ticket shows the amount you borrowed, the fees, and the date your loan is due. To get your item back, bring the
+          ticket and your ID and pay what's due.
+        </p>
+        <p class="muted">
+          Need more time? In most cases you can extend by paying the fees due, and the loan rolls forward. Call us before the due date
+          and we'll tell you exactly what it takes.
+        </p>
+        <a class="link-arrow" href="/guides/how-pawn-loans-work-in-georgia/">How pawn loans work in Georgia</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="law-h">
+    <div class="container split split--center">
+      <div class="stack">
+        <span class="eyebrow">Georgia pawn basics</span>
+        <h2 id="law-h">Everything in writing, every time</h2>
+        <p class="muted">
+          Georgia law sets the rules for pawn loans and requires that every loan's terms be written on the pawn ticket you sign. Read it
+          before you sign, keep it safe, and ask us about anything that isn't clear. We'd rather explain twice than have you surprised.
+        </p>
+      </div>
+      <ul class="checks">
+        <li>No credit check, no credit reporting</li>
+        <li>Loan amount, fees, and due date written on your ticket</li>
+        <li>Your item is stored safely until you pick it up</li>
+        <li>Not repaying never means collections calls</li>
+      </ul>
+    </div>
+  </section>
+
+  <OfferBand intent="pawn" heading="Wondering what your item is worth?" />
+
+  <Faq items={faq} />
+
+  <section class="section section--band" aria-labelledby="more-h">
+    <div class="container">
+      <h2 id="more-h" class="section-head">More ways we can help</h2>
+      <ServiceCards exclude="pawn" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  @media (min-width: 480px) {
+    .two-col {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

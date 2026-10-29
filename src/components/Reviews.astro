@@ -1,0 +1,105 @@
+---
+/**
+ * Owner-approved review quotes (src/data/site.ts → reviews), the overall
+ * rating, and the "Leave us a review" link. With no approved quotes yet it
+ * shows just the rating and the review link.
+ */
+import Stars from './Stars.astro';
+import { reviews, reviewUrl } from '../data/site';
+import { shop } from '../lib/shop';
+
+interface Props {
+  limit?: number;
+  id?: string;
+}
+const { limit = 3, id } = Astro.props;
+const shown = reviews.slice(0, limit);
+const rating = shop.rating;
+---
+
+<section class="section section--band" id={id} aria-labelledby="reviews-h">
+  <div class="container">
+    <div class="head center">
+      <span class="rule rule--center" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 18 18"><path d="M9 0 18 9 9 18 0 9Z" fill="currentColor"></path></svg>
+      </span>
+      <h2 id="reviews-h">What our customers say</h2>
+      {
+        rating && (
+          <p class="muted">
+            {rating.value.toFixed(1)} average from {rating.count} reviews on {rating.source}
+          </p>
+        )
+      }
+    </div>
+
+    {
+      shown.length > 0 && (
+        <ul class="grid grid-3 quotes" role="list">
+          {shown.map((r) => (
+            <li class="card quote">
+              <Stars />
+              <blockquote>
+                <p>{r.quote}</p>
+              </blockquote>
+              <p class="who">
+                {r.name}, {r.source} review
+              </p>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    <div class="actions">
+      {
+        reviewUrl ? (
+          <a class="btn btn--outline" href="/review" data-track="review">
+            Leave us a Google review
+          </a>
+        ) : (
+          rating?.url && (
+            <a class="btn btn--outline" href={rating.url} rel="noopener">
+              Read our reviews on {rating.source}
+            </a>
+          )
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .head {
+    display: grid;
+    gap: var(--s-3);
+    margin-bottom: var(--s-6);
+  }
+  .quotes {
+    list-style: none;
+    padding: 0;
+  }
+  .quote {
+    display: grid;
+    gap: var(--s-3);
+    align-content: start;
+  }
+  blockquote p {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.1875rem;
+    line-height: 1.45;
+  }
+  .who {
+    font-size: var(--text-small);
+    color: var(--muted);
+  }
+  .actions {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--s-6);
+  }
+  .actions:empty {
+    display: none;
+  }
+</style>

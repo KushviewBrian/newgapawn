@@ -1,0 +1,50 @@
+---
+import { currentBanner } from '../lib/shop';
+
+const banner = currentBanner();
+---
+
+{
+  banner && (
+    <div class:list={['banner', banner.tone]} role="region" aria-label="Store notice" data-until={banner.until ?? undefined}>
+      <p class="container">
+        <span class="label">{banner.label}</span> {banner.message}
+      </p>
+    </div>
+  )
+}
+
+<script>
+  import { easternParts } from '../lib/hours';
+
+  // Builds run every few hours; hide a banner whose last day has passed in between.
+  const el = document.querySelector<HTMLElement>('.banner[data-until]');
+  if (el && el.dataset.until! < easternParts(new Date()).ymd) el.hidden = true;
+</script>
+
+<style>
+  .banner {
+    background: var(--charcoal);
+    color: var(--on-dark);
+    font-size: 0.875rem;
+    line-height: 1.45;
+  }
+  .banner p {
+    padding-block: 10px;
+    text-align: center;
+  }
+  .label {
+    margin-right: 0.4em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    color: var(--brass-light);
+  }
+  .banner.closed {
+    background: var(--closed);
+  }
+  .banner.closed .label {
+    color: #f6d9a8;
+  }
+</style>

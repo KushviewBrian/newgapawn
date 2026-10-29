@@ -1,0 +1,158 @@
+---
+/**
+ * Static map drawn from OpenStreetMap data (src/data/map.json, built by
+ * `npm run map`). No map script, no third-party requests; tapping it opens
+ * Google or Apple Maps with directions.
+ */
+import map from '../data/map.json';
+import { business, mapsLinks } from '../data/site';
+
+const [px, py] = map.pin;
+// Show a 3:2 window around the pin.
+const vw = 720;
+const vh = 480;
+const vx = Math.round(px - vw / 2);
+const vy = Math.round(py - vh / 2);
+---
+
+<a class="map" href={mapsLinks.google} data-directions={mapsLinks.apple} data-track="directions" data-track-where="map" rel="noopener">
+  <svg viewBox={`${vx} ${vy} ${vw} ${vh}`} role="img" aria-labelledby="map-title" preserveAspectRatio="xMidYMid slice">
+    <title id="map-title">Map: {business.name} on Villa Rica Highway (GA-61) in Dallas, Georgia. Opens directions.</title>
+    <rect x={vx} y={vy} width={vw} height={vh} class="land"></rect>
+    <g class="water">{map.water.map((d) => <path d={d} />)}</g>
+    <g class="road local">{map.roads.local.map((d) => <path d={d} />)}</g>
+    <g class="road minor casing">{map.roads.minor.map((d) => <path d={d} />)}</g>
+    <g class="road minor">{map.roads.minor.map((d) => <path d={d} />)}</g>
+    <g class="road major casing">{map.roads.major.map((d) => <path d={d} />)}</g>
+    <g class="road major">{map.roads.major.map((d) => <path d={d} />)}</g>
+    <defs>{map.labels.map((l) => <path id={l.id} d={l.d} />)}</defs>
+    <g class="labels" aria-hidden="true">
+      {
+        map.labels.map((l) => (
+          <text class={l.cls} dy="-9">
+            <textPath href={`#${l.id}`} startOffset="50%" text-anchor="middle">
+              {l.text}
+            </textPath>
+          </text>
+        ))
+      }
+    </g>
+    <g class="pin" transform={`translate(${px} ${py})`}>
+      <circle r="26" class="halo"></circle>
+      <path d="M0 0c-8-10-14-17-14-24a14 14 0 0 1 28 0c0 7-6 14-14 24Z" class="drop"></path>
+      <circle cy="-24" r="5" class="hole"></circle>
+    </g>
+  </svg>
+  <span class="tag">
+    <strong>{business.name}</strong>
+    <span>{business.address.street} · Get directions</span>
+  </span>
+  <span class="credit">{map.attribution}</span>
+</a>
+
+<style>
+  .map {
+    position: relative;
+    display: block;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border: var(--hairline);
+    border-radius: var(--radius);
+    background: #efebe1;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+  .land {
+    fill: #efebe1;
+  }
+  .water path {
+    fill: #cfdde0;
+  }
+  .road path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .local path {
+    stroke: #fbf9f4;
+    stroke-width: 3;
+  }
+  .minor.casing path {
+    stroke: #d9d2c2;
+    stroke-width: 7;
+  }
+  .minor path {
+    stroke: #ffffff;
+    stroke-width: 5;
+  }
+  .major.casing path {
+    stroke: #b39250;
+    stroke-width: 11;
+  }
+  .major path {
+    stroke: #e9d39b;
+    stroke-width: 8;
+  }
+  .labels text {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    fill: #6b665b;
+    paint-order: stroke;
+    stroke: #efebe1;
+    stroke-width: 4px;
+    letter-spacing: 0.02em;
+  }
+  .labels text.major {
+    font-weight: 700;
+    font-size: 14px;
+    fill: #5c4715;
+  }
+  .halo {
+    fill: rgb(123 45 38 / 0.14);
+  }
+  .drop {
+    fill: var(--closed);
+    stroke: #fff;
+    stroke-width: 2;
+  }
+  .hole {
+    fill: #fff;
+  }
+  .tag {
+    position: absolute;
+    left: var(--s-4);
+    bottom: var(--s-4);
+    display: grid;
+    gap: 2px;
+    max-width: calc(100% - 2 * var(--s-4));
+    padding: var(--s-2) var(--s-4);
+    background: var(--card);
+    border: var(--hairline);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 14px -6px rgb(28 28 26 / 0.25);
+    font-size: 0.875rem;
+    line-height: 1.35;
+  }
+  .tag span {
+    color: var(--brass-deep);
+    font-weight: 600;
+  }
+  .map:hover .tag span {
+    text-decoration: underline;
+  }
+  .credit {
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    padding: 1px 6px;
+    background: rgb(255 255 255 / 0.75);
+    border-radius: 3px;
+    font-size: 0.6875rem;
+    color: var(--muted);
+  }
+</style>

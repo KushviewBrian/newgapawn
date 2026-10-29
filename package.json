@@ -1,0 +1,36 @@
+{
+  "name": "newgapawn",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Website for New Georgia Pawn Shop, Dallas, GA",
+  "scripts": {
+    "data": "node scripts/sync-data.mjs",
+    "dev": "npm run data && astro dev",
+    "build": "npm run data && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "launch-check": "node scripts/launch-check.mjs",
+    "map": "node scripts/render-map.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource/playfair-display": "^5.3.0",
+    "astro": "^7.4.4",
+    "qrcode": "^1.5.4",
+    "satori": "^0.63.2",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@cloudflare/workers-types": "^5.20261029.1",
+    "@fontsource/inter": "^5.3.0",
+    "@types/qrcode": "^1.5.6",
+    "typescript": "^6.0.3",
+    "wrangler": "^4.155.0"
+  }
+}

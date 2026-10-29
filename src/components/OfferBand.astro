@@ -1,0 +1,52 @@
+---
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  text?: string;
+  /** Pre-selects "pawn" or "sell" on the form. */
+  intent?: 'pawn' | 'sell';
+}
+const {
+  eyebrow = 'Save yourself a trip',
+  heading = "Send us a photo. We'll tell you what we can offer.",
+  text = "Snap up to three photos of the item you want to pawn or sell, tell us the brand and condition, and we'll call or text you back.",
+  intent,
+} = Astro.props;
+const href = intent ? `/get-an-offer/?type=${intent}` : '/get-an-offer/';
+---
+
+<section class="section section--dark offer-band">
+  <div class="container inner">
+    <div class="copy">
+      <span class="eyebrow">{eyebrow}</span>
+      <h2>{heading}</h2>
+      <p class="lede">{text}</p>
+    </div>
+    <a class="btn btn--brass" href={href} data-track="offer-cta">Get an Offer</a>
+  </div>
+</section>
+
+<style>
+  .inner {
+    display: grid;
+    gap: var(--s-5);
+    align-items: center;
+  }
+  .copy {
+    display: grid;
+    gap: var(--s-3);
+  }
+  .copy .lede {
+    color: var(--on-dark-muted);
+  }
+  .btn {
+    justify-self: start;
+    min-width: 180px;
+  }
+  @media (min-width: 768px) {
+    .inner {
+      grid-template-columns: 1fr auto;
+      gap: var(--s-7);
+    }
+  }
+</style>

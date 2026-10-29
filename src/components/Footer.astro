@@ -1,0 +1,178 @@
+---
+import Wordmark from './Wordmark.astro';
+import { business, fullAddress } from '../data/site';
+
+interface Props {
+  /** Ad landing pages use a short footer with no firearms content. */
+  variant?: 'full' | 'deal';
+}
+const { variant = 'full' } = Astro.props;
+const year = new Date().getFullYear();
+
+const columns = [
+  [
+    { href: '/pawn-loans/', label: 'Pawn Loans' },
+    { href: '/sell-gold/', label: 'Sell Gold & Silver' },
+    { href: '/firearms/', label: 'Firearms' },
+    { href: '/ffl-transfers/', label: 'FFL Transfers' },
+  ],
+  [
+    { href: '/about/', label: 'About & Reviews' },
+    { href: '/visit/', label: 'Visit & Hours' },
+    { href: '/get-an-offer/', label: 'Get an Offer' },
+    { href: '/guides/', label: 'Guides' },
+  ],
+];
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="top">
+      <div class="id">
+        <Wordmark tone="light" />
+        <address>
+          {business.address.street}<br />
+          {business.address.city}, {business.address.region}
+          {business.address.postalCode}<br />
+          <a href={`tel:${business.phoneE164}`} data-track="call" data-track-where="footer">{business.phone}</a><br />
+          <a href={`mailto:${business.email}`}>{business.email}</a>
+        </address>
+      </div>
+      {
+        variant === 'full' ? (
+          <nav class="cols" aria-label="Footer">
+            {columns.map((links) => (
+              <ul>
+                {links.map((l) => (
+                  <li>
+                    <a href={l.href}>{l.label}</a>
+                  </li>
+                ))}
+              </ul>
+            ))}
+            <ul>
+              <li>
+                <a href={business.links.facebook} rel="noopener">
+                  Facebook
+                </a>
+              </li>
+              <li>
+                <a href="/store-policies/">Store policies</a>
+              </li>
+              <li>
+                <a href="/privacy/">Privacy</a>
+              </li>
+            </ul>
+          </nav>
+        ) : (
+          <nav class="cols" aria-label="Footer">
+            <ul>
+              <li>
+                <a href="/">Home</a>
+              </li>
+              <li>
+                <a href="/visit/">Visit & Hours</a>
+              </li>
+              <li>
+                <a href="/privacy/">Privacy</a>
+              </li>
+            </ul>
+          </nav>
+        )
+      }
+    </div>
+
+    <div class="legal">
+      {
+        variant === 'full' ? (
+          <p>
+            {business.licenseLine} · FFL {business.ffl.number}
+          </p>
+        ) : (
+          <p>Licensed pawnbroker · {fullAddress}</p>
+        )
+      }
+      {variant === 'full' && <p>Firearms are sold in store only, subject to a federal background check.</p>}
+      <p>© {year} {business.legalName}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--charcoal);
+    color: var(--on-dark-muted);
+    padding-block: var(--s-8) var(--s-6);
+    font-size: var(--text-small);
+  }
+  a {
+    color: var(--on-dark);
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--brass-light);
+    text-decoration: underline;
+  }
+  .top {
+    display: grid;
+    gap: var(--s-7);
+  }
+  address {
+    margin-top: var(--s-4);
+    font-style: normal;
+    line-height: 1.8;
+  }
+  address a {
+    color: var(--brass-light);
+    text-decoration: underline;
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--s-5);
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    align-content: start;
+  }
+  ul a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  @media (pointer: coarse) {
+    ul a {
+      min-height: 48px;
+    }
+  }
+  .legal {
+    display: grid;
+    gap: var(--s-2);
+    margin-top: var(--s-7);
+    padding-top: var(--s-5);
+    border-top: 1px solid rgb(255 255 255 / 0.12);
+    font-size: 0.8125rem;
+  }
+  @media (min-width: 768px) {
+    .top {
+      grid-template-columns: 1fr 1.4fr;
+    }
+  }
+  @media (min-width: 1024px) {
+    .legal {
+      grid-template-columns: auto 1fr auto;
+      gap: var(--s-6);
+    }
+    .legal p:nth-child(2) {
+      text-align: center;
+    }
+  }
+  /* Room for the phone action bar. */
+  @media (max-width: 1023px) {
+    .site-footer {
+      padding-bottom: calc(var(--s-6) + var(--action-bar-h) + 16px + env(safe-area-inset-bottom));
+    }
+  }
+</style>

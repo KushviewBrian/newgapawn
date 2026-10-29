@@ -1,0 +1,131 @@
+---
+/**
+ * Printable counter card: a QR code that sends customers straight to the
+ * Google review form via the /review short link. Print on card stock and
+ * cut along the border (two cards per letter page).
+ */
+import QRCode from 'qrcode';
+import Base from '../layouts/Base.astro';
+import Stars from '../components/Stars.astro';
+import { business, reviewUrl } from '../data/site';
+
+const target = new URL('/review', Astro.site).href;
+const qr = await QRCode.toString(target, { type: 'svg', errorCorrectionLevel: 'M', margin: 0, color: { dark: '#1c1c1a', light: '#0000' } });
+const display = target.replace(/^https?:\/\//, '');
+---
+
+<Base title="Review card" description="Printable counter card with a QR code for leaving New Georgia Pawn a review." noindex>
+  <section class="section no-print-pad">
+    <div class="container">
+      <div class="screen-only stack">
+        <h1 class="h2">Counter review card</h1>
+        <p class="muted">
+          Print on card stock (File → Print, “Background graphics” on) and cut along the border.
+          {!reviewUrl && <strong> The /review link isn’t set yet: add the Google place ID in src/data/site.ts first.</strong>}
+        </p>
+      </div>
+      <div class="sheet">
+        {
+          [0, 1].map(() => (
+            <div class="qr-card">
+              <svg class="diamond" width="16" height="16" viewBox="0 0 18 18" aria-hidden="true">
+                <path d="M9 0 18 9 9 18 0 9Z" />
+              </svg>
+              <p class="kicker">Happy with your visit?</p>
+              <p class="headline">Leave us a review</p>
+              <Stars size={22} />
+              <div class="qr" set:html={qr} />
+              <p class="how">Point your phone camera at the code</p>
+              <p class="url">{display}</p>
+              <p class="name">{business.name} · {business.phone}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .screen-only {
+    margin-bottom: var(--s-6);
+  }
+  .sheet {
+    display: grid;
+    gap: var(--s-5);
+    justify-content: center;
+  }
+  @media (min-width: 768px) {
+    .sheet {
+      grid-template-columns: repeat(2, 4in);
+    }
+  }
+  .qr-card {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    width: min(4in, 100%);
+    padding: 0.35in 0.3in;
+    background: var(--card);
+    border: 1px dashed var(--stone-strong);
+    text-align: center;
+  }
+  .diamond {
+    fill: var(--brass);
+  }
+  .kicker {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--brass-deep);
+  }
+  .headline {
+    font-family: var(--font-serif);
+    font-size: 1.875rem;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+  .qr {
+    width: 2.1in;
+    margin-block: 8px;
+  }
+  .qr :global(svg) {
+    width: 100%;
+    height: auto;
+  }
+  .how {
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+  .url {
+    font-weight: 600;
+  }
+  .name {
+    margin-top: 6px;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  @media print {
+    :global(.site-header),
+    :global(.site-footer),
+    :global(.action-bar),
+    :global(.banner),
+    :global(.skip-link),
+    .screen-only {
+      display: none !important;
+    }
+    .no-print-pad {
+      padding: 0;
+    }
+    .sheet {
+      grid-template-columns: repeat(2, 3.6in);
+      gap: 0.2in;
+    }
+    .qr-card {
+      width: 3.6in;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+</style>

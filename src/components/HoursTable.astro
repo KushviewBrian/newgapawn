@@ -1,0 +1,112 @@
+---
+import { DAY_NAMES, DISPLAY_ORDER, formatSpan, describeClosure } from '../lib/hours';
+import { shop } from '../lib/shop';
+
+interface Props {
+  heading?: string;
+  showClosures?: boolean;
+}
+const { heading, showClosures = true } = Astro.props;
+const upcoming = shop.closures.slice(0, 4);
+---
+
+<div class="hours" data-hours-table>
+  {heading && <h3 class="heading">{heading}</h3>}
+  <table>
+    <caption class="visually-hidden">Store hours, Eastern Time</caption>
+    <tbody>
+      {
+        DISPLAY_ORDER.map((day) => (
+          <tr data-day={day}>
+            <th scope="row">
+              {DAY_NAMES[day]}
+              <span class="today-tag"> (today)</span>
+            </th>
+            <td class:list={{ closed: !shop.hours[day] }}>{formatSpan(shop.hours[day], { compact: true })}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  {
+    showClosures && upcoming.length > 0 && (
+      <div class="closures">
+        <p class="eyebrow">Coming up</p>
+        <ul>
+          {upcoming.map((c) => (
+            <li>{describeClosure(c)}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+</div>
+
+<script>
+  import { DAY_KEYS, easternParts } from '../lib/hours';
+
+  const day = DAY_KEYS[easternParts(new Date()).dayIndex];
+  document.querySelectorAll(`[data-hours-table] tr[data-day="${day}"]`).forEach((row) => row.classList.add('is-today'));
+</script>
+
+<style>
+  .heading {
+    margin-bottom: var(--s-3);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+  tr {
+    border-bottom: var(--hairline);
+  }
+  tr:first-child {
+    border-top: var(--hairline);
+  }
+  th,
+  td {
+    padding: 12px var(--s-4);
+    text-align: left;
+    font-weight: 400;
+  }
+  td {
+    text-align: right;
+    white-space: nowrap;
+  }
+  td.closed {
+    color: var(--muted);
+  }
+  .today-tag {
+    display: none;
+  }
+  tr.is-today {
+    background: var(--paper-2);
+  }
+  tr.is-today th,
+  tr.is-today td {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  tr.is-today .today-tag {
+    display: inline;
+    font-weight: 400;
+  }
+  .closures {
+    margin-top: var(--s-4);
+    padding: var(--s-4);
+    background: var(--closed-bg);
+    border-radius: var(--radius);
+    font-size: var(--text-small);
+  }
+  .closures .eyebrow {
+    color: var(--closed);
+    margin-bottom: var(--s-1);
+  }
+  .closures ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--s-1);
+  }
+</style>

@@ -1,0 +1,437 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { business } from '../data/site';
+
+const title = 'Get an Offer';
+const description =
+  'Send photos of an item you want to pawn or sell to New Georgia Pawn in Dallas, GA. Tell us the brand and condition and we’ll get back to you with an offer.';
+const crumbs = [{ name: 'Get an Offer', path: '/get-an-offer/' }];
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
+
+const itemTypes = [
+  'Gold or silver jewelry',
+  'Coins or bullion',
+  'Firearm',
+  'Power tools or hand tools',
+  'TV, game console, or audio',
+  'Laptop, tablet, or phone',
+  'Musical instrument',
+  'Lawn or outdoor equipment',
+  'Something else',
+];
+const conditions = ['Like new', 'Good, light wear', 'Fair, shows wear', 'Needs repair'];
+---
+
+<Base title={title} description={description} og="get-an-offer" breadcrumbs={crumbs}>
+  <PageHero
+    eyebrow="Save yourself a trip"
+    title="Send a photo. Get an offer."
+    lede="Tell us what you have and add up to three photos. We'll call or text you back, usually the same business day."
+    crumbs={crumbs}
+  >
+    <ul class="checks small">
+      <li>No obligation. A photo offer is a starting point; the final offer is made in person.</li>
+      <li>Firearms are bought in store only. Bring the gun unloaded and cased.</li>
+    </ul>
+  </PageHero>
+
+  <section class="section">
+    <div class="container split">
+      <form class="offer-form card" method="post" action="/api/offer" enctype="multipart/form-data" data-offer-form novalidate>
+        <fieldset class="field">
+          <legend>Do you want to pawn it or sell it?</legend>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="intent" value="pawn" required /> <span>Pawn it (get it back later)</span></label>
+            <label class="choice"><input type="radio" name="intent" value="sell" /> <span>Sell it</span></label>
+            <label class="choice"><input type="radio" name="intent" value="unsure" /> <span>Not sure yet</span></label>
+          </div>
+        </fieldset>
+
+        <div class="row">
+          <div class="field">
+            <label for="itemType">What is it?</label>
+            <select class="select" id="itemType" name="itemType" required>
+              <option value="">Choose one</option>
+              {itemTypes.map((t) => <option>{t}</option>)}
+            </select>
+          </div>
+          <div class="field">
+            <label for="condition">Condition</label>
+            <select class="select" id="condition" name="condition" required>
+              <option value="">Choose one</option>
+              {conditions.map((c) => <option>{c}</option>)}
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="brandModel">Brand and model</label>
+          <input class="input" id="brandModel" name="brandModel" type="text" maxlength="160" autocomplete="off" placeholder="e.g. DeWalt DCD771 drill, 14k gold chain" required />
+        </div>
+
+        <div class="field">
+          <label for="details">Anything else we should know? <span class="hint">(optional)</span></label>
+          <textarea class="textarea" id="details" name="details" maxlength="2000" placeholder="Accessories, age, weight or karat for jewelry, what you're hoping to get"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="photos">Photos <span class="hint">(up to 3)</span></label>
+          <label class="drop" for="photos">
+            <Icon name="camera" size={28} />
+            <span><strong>Add photos</strong> or take them now</span>
+            <span class="hint">Show the whole item, any brand or model label, and any damage.</span>
+          </label>
+          <input class="visually-hidden" id="photos" name="photos" type="file" accept="image/*" multiple />
+          <ul class="previews" data-previews aria-live="polite"></ul>
+          <p class="hint warn">Please don't send photos of your ID, pawn tickets, or other paperwork.</p>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="name">Your name</label>
+            <input class="input" id="name" name="name" type="text" autocomplete="name" maxlength="80" required />
+          </div>
+          <div class="field">
+            <label for="phone">Phone number</label>
+            <input class="input" id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" required />
+          </div>
+        </div>
+
+        {
+          business.textEnabled ? (
+            <fieldset class="field">
+              <legend>How should we reach you?</legend>
+              <div class="choices">
+                <label class="choice">
+                  <input type="radio" name="contact" value="call" checked /> <span>Call me</span>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="contact" value="text" /> <span>Text me</span>
+                </label>
+              </div>
+            </fieldset>
+          ) : (
+            <input type="hidden" name="contact" value="call" />
+          )
+        }
+
+        <div class="field">
+          <label for="email">Email <span class="hint">(optional)</span></label>
+          <input class="input" id="email" name="email" type="email" autocomplete="email" maxlength="120" />
+        </div>
+
+        <!-- Honeypot: humans never see or fill this. -->
+        <div class="hp" aria-hidden="true">
+          <label for="website">Leave this empty</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="cf-turnstile" data-sitekey={siteKey} data-theme="light" data-size="flexible"></div>
+
+        <p class="error" data-form-error role="alert" hidden></p>
+
+        <button class="btn btn--ink btn--block submit" type="submit" data-submit>
+          <span>Send for an offer</span>
+        </button>
+        <p class="hint">
+          We use your details only to reply about this item. See our <a href="/privacy/">privacy policy</a>.
+        </p>
+
+        <noscript>
+          <p class="note">
+            This form needs JavaScript for its spam check. Call us at <a href={`tel:${business.phoneE164}`}>{business.phone}</a> or
+            email photos to <a href={`mailto:${business.email}`}>{business.email}</a> instead.
+          </p>
+        </noscript>
+      </form>
+
+      <aside class="side stack-lg" aria-label="Other ways to reach us">
+        <div class="card stack">
+          <h2 class="h3">Rather talk it through?</h2>
+          <p class="muted small">Call during store hours and describe the item. We can often give you a ballpark on the phone.</p>
+          <a class="btn btn--brass btn--block" href={`tel:${business.phoneE164}`} data-track="call" data-track-where="offer-side">
+            <Icon name="phone" /> {business.phone}
+          </a>
+          {
+            business.textEnabled && (
+              <a class="btn btn--outline btn--block" href={`sms:${business.phoneE164}`} data-track="text" data-track-where="offer-side">
+                <Icon name="message" /> Text us a photo
+              </a>
+            )
+          }
+        </div>
+        <div class="card stack">
+          <h2 class="h3">What happens next</h2>
+          <ol class="steps compact">
+            <li><div><p class="small">We look at your photos and details.</p></div></li>
+            <li><div><p class="small">We call you with a starting offer or questions.</p></div></li>
+            <li><div><p class="small">Bring the item in with your ID to finish the deal.</p></div></li>
+          </ol>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<script>
+  import { shrinkImage } from '../scripts/shrink-image';
+
+  const MAX_PHOTOS = 3;
+  const form = document.querySelector<HTMLFormElement>('[data-offer-form]')!;
+  const input = form.querySelector<HTMLInputElement>('#photos')!;
+  const previews = form.querySelector<HTMLUListElement>('[data-previews]')!;
+  const errorEl = form.querySelector<HTMLElement>('[data-form-error]')!;
+  const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+  let photos: File[] = [];
+
+  // Pre-select pawn or sell when linked from a service page.
+  const intent = new URLSearchParams(location.search).get('type');
+  form.querySelector<HTMLInputElement>(`input[name="intent"][value="${intent}"]`)?.click();
+
+  function renderPreviews() {
+    previews.replaceChildren(
+      ...photos.map((file, i) => {
+        const li = document.createElement('li');
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.alt = `Photo ${i + 1}`;
+        img.onload = () => URL.revokeObjectURL(img.src);
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.textContent = 'Remove';
+        remove.setAttribute('aria-label', `Remove photo ${i + 1}`);
+        remove.onclick = () => {
+          photos.splice(i, 1);
+          renderPreviews();
+        };
+        li.append(img, remove);
+        return li;
+      }),
+    );
+  }
+
+  input.addEventListener('change', async () => {
+    const chosen = [...(input.files ?? [])].filter((f) => f.type.startsWith('image/'));
+    input.value = '';
+    for (const file of chosen) {
+      if (photos.length >= MAX_PHOTOS) {
+        showError(`You can send up to ${MAX_PHOTOS} photos.`);
+        break;
+      }
+      try {
+        photos.push(await shrinkImage(file));
+      } catch {
+        showError(`We couldn't read "${file.name}". Try a JPG or PNG photo.`);
+      }
+    }
+    renderPreviews();
+  });
+
+  function showError(message: string) {
+    errorEl.textContent = message;
+    errorEl.hidden = false;
+  }
+
+  function firstInvalid(): HTMLElement | null {
+    for (const el of form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[required]')) {
+      el.removeAttribute('aria-invalid');
+    }
+    const invalid = [...form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[required]')].filter((el) => !el.checkValidity());
+    invalid.forEach((el) => el.setAttribute('aria-invalid', 'true'));
+    return invalid[0] ?? null;
+  }
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    errorEl.hidden = true;
+
+    const invalid = firstInvalid();
+    if (invalid) {
+      showError('Please fill in the highlighted fields.');
+      invalid.focus();
+      return;
+    }
+
+    const data = new FormData(form);
+    data.delete('photos');
+    photos.forEach((p) => data.append('photos', p, p.name));
+    if (!data.get('cf-turnstile-response')) {
+      showError('Please wait a moment for the spam check to finish, then try again.');
+      return;
+    }
+
+    submit.disabled = true;
+    submit.querySelector('span')!.textContent = 'Sending…';
+    try {
+      const res = await fetch(form.action, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok || !body.ok) throw new Error(body.error || 'Something went wrong.');
+      location.href = '/offer-sent/';
+    } catch (e) {
+      showError(`${(e as Error).message} You can also call us at (770) 443-0328.`);
+      (window as any).turnstile?.reset();
+      submit.disabled = false;
+      submit.querySelector('span')!.textContent = 'Send for an offer';
+    }
+  });
+</script>
+
+<style>
+  .offer-form {
+    display: grid;
+    gap: var(--s-5);
+    padding: clamp(var(--s-5), 4vw, var(--s-7));
+  }
+  fieldset {
+    border: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  legend {
+    margin-bottom: var(--s-2);
+  }
+  .row {
+    display: grid;
+    gap: var(--s-5);
+  }
+  @media (min-width: 480px) {
+    .row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+  .choice {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    min-height: 48px;
+    padding: var(--s-2) var(--s-4);
+    border: 1px solid var(--stone-strong);
+    border-radius: var(--radius);
+    background: var(--card);
+    font-weight: 500 !important;
+    cursor: pointer;
+    transition: border-color var(--ease), background-color var(--ease);
+  }
+  .choice:has(input:checked) {
+    border-color: var(--ink);
+    background: var(--paper-2);
+  }
+  .choice input {
+    accent-color: var(--ink);
+    width: 18px;
+    height: 18px;
+  }
+  .drop {
+    display: grid;
+    justify-items: center;
+    gap: var(--s-1);
+    padding: var(--s-6) var(--s-4);
+    border: 1.5px dashed var(--stone-strong);
+    border-radius: var(--radius);
+    background: var(--paper);
+    text-align: center;
+    font-weight: 400 !important;
+    color: var(--muted);
+    cursor: pointer;
+    transition: border-color var(--ease);
+  }
+  .drop :global(svg) {
+    color: var(--brass-deep);
+  }
+  .drop strong {
+    color: var(--ink);
+  }
+  .drop:hover {
+    border-color: var(--ink);
+  }
+  .field:has(#photos:focus-visible) .drop {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
+  .previews {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    list-style: none;
+    padding: 0;
+  }
+  .previews:empty {
+    display: none;
+  }
+  .previews :global(li) {
+    display: grid;
+    gap: var(--s-1);
+    width: 104px;
+  }
+  .previews :global(img) {
+    width: 104px;
+    height: 104px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    border: var(--hairline);
+  }
+  .previews :global(button) {
+    min-height: 32px;
+    background: none;
+    border: 0;
+    color: var(--closed);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+  .warn {
+    color: var(--closed);
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .error {
+    padding: var(--s-3) var(--s-4);
+    background: var(--closed-bg);
+    color: var(--closed);
+    border-radius: var(--radius);
+    font-weight: 500;
+    font-size: var(--text-small);
+  }
+  [aria-invalid='true'] {
+    border-color: var(--closed) !important;
+  }
+  .submit[disabled] {
+    opacity: 0.7;
+    cursor: progress;
+  }
+  .side {
+    align-content: start;
+  }
+  .steps.compact {
+    gap: var(--s-3);
+  }
+  .steps.compact > li {
+    grid-template-columns: 32px 1fr;
+    align-items: center;
+  }
+  .steps.compact > li::before {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+  @media (min-width: 1024px) {
+    .side {
+      position: sticky;
+      top: calc(var(--header-h) + var(--s-5));
+    }
+  }
+</style>

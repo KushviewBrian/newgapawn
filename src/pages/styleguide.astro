@@ -1,0 +1,177 @@
+---
+/** Hidden reference page: every token and component, for consistent future edits. */
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import OpenBadge from '../components/OpenBadge.astro';
+import ServiceCards from '../components/ServiceCards.astro';
+import HoursTable from '../components/HoursTable.astro';
+import Stars from '../components/Stars.astro';
+import { unconfirmed } from '../data/site';
+import { shop } from '../lib/shop';
+
+const colors = [
+  ['--ink', 'Headings and body text'],
+  ['--paper', 'Page background'],
+  ['--paper-2', 'Alternating bands'],
+  ['--card', 'Card background'],
+  ['--stone', 'Borders, hairline rules'],
+  ['--stone-strong', 'Input borders'],
+  ['--muted', 'Secondary text'],
+  ['--brass', 'Accent fills, buttons with dark text'],
+  ['--brass-deep', 'Links and accent text'],
+  ['--brass-light', 'Accent on dark backgrounds'],
+  ['--charcoal', 'Footer, dark bands'],
+  ['--open', '"Open now" badge'],
+  ['--closed', '"Closed" badge, closure banner'],
+];
+const spacing = [4, 8, 12, 16, 24, 32, 48, 64, 96];
+---
+
+<Base title="Style guide" description="Design tokens and components for the New Georgia Pawn website." noindex>
+  <section class="section">
+    <div class="container stack-lg">
+      <div class="stack">
+        <span class="eyebrow">Internal</span>
+        <h1>Style guide</h1>
+        <p class="lede">
+          Tokens live in <code>src/styles/tokens.css</code>; global styles in <code>src/styles/global.css</code>. Shop data source:
+          <strong>{shop.source}</strong>, built {new Date(shop.builtAt).toLocaleString('en-US', { timeZone: 'America/New_York' })} ET.
+        </p>
+      </div>
+
+      <h2>Still to confirm with the owner</h2>
+      <ul class="checks">{unconfirmed.map((u) => <li>{u}</li>)}</ul>
+
+      <h2>Color</h2>
+      <ul class="swatches" role="list">
+        {
+          colors.map(([token, use]) => (
+            <li>
+              <span class="chip" data-token={token} />
+              <code>{token}</code>
+              <span class="small muted">{use}</span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <h2>Type</h2>
+      <div class="stack card">
+        <p class="display">Display · Playfair 600</p>
+        <p class="h2">Heading 2 · Playfair 600</p>
+        <p class="h3">Heading 3 · Inter 600</p>
+        <p>Body · Inter 400, 17–18 px, line height 1.6, max 65 characters per line.</p>
+        <p class="lede">Lede paragraph for page intros.</p>
+        <span class="eyebrow">Small caps label</span>
+      </div>
+
+      <h2>Spacing</h2>
+      <div class="spaces">
+        {
+          spacing.map((s) => (
+            <div>
+              <span class="bar" data-w={s} />
+              <code>{s}px</code>
+            </div>
+          ))
+        }
+      </div>
+
+      <h2>Buttons and links</h2>
+      <div class="btn-row">
+        <a class="btn btn--ink" href="#">Ink</a>
+        <a class="btn btn--brass" href="#"><Icon name="phone" /> Brass</a>
+        <a class="btn btn--outline" href="#">Outline</a>
+        <a class="link-arrow" href="#">Arrow link</a>
+      </div>
+
+      <h2>Badges and stars</h2>
+      <div class="btn-row"><OpenBadge /><Stars /></div>
+
+      <h2>Service cards</h2>
+      <ServiceCards />
+
+      <h2>Hours table</h2>
+      <div class="hours-demo"><HoursTable /></div>
+
+      <h2>Steps, checks, note</h2>
+      <div class="grid grid-2">
+        <ol class="steps">
+          <li><div><h3>Step one</h3><p class="muted">Description.</p></div></li>
+          <li><div><h3>Step two</h3><p class="muted">Description.</p></div></li>
+        </ol>
+        <div class="stack">
+          <ul class="checks"><li>Check item</li><li>Another check item</li></ul>
+          <p class="note">A callout note for important details.</p>
+        </div>
+      </div>
+
+      <h2>Section rule</h2>
+      <span class="rule" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 18 18"><path d="M9 0 18 9 9 18 0 9Z" fill="currentColor"></path></svg>
+      </span>
+    </div>
+  </section>
+</Base>
+
+<style>
+  code {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 0.875em;
+  }
+  .swatches {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--s-4);
+  }
+  .swatches li {
+    display: grid;
+    gap: 4px;
+  }
+  .chip {
+    height: 64px;
+    border-radius: var(--radius);
+    border: var(--hairline);
+  }
+  .chip[data-token='--ink'] { background: var(--ink); }
+  .chip[data-token='--paper'] { background: var(--paper); }
+  .chip[data-token='--paper-2'] { background: var(--paper-2); }
+  .chip[data-token='--card'] { background: var(--card); }
+  .chip[data-token='--stone'] { background: var(--stone); }
+  .chip[data-token='--stone-strong'] { background: var(--stone-strong); }
+  .chip[data-token='--muted'] { background: var(--muted); }
+  .chip[data-token='--brass'] { background: var(--brass); }
+  .chip[data-token='--brass-deep'] { background: var(--brass-deep); }
+  .chip[data-token='--brass-light'] { background: var(--brass-light); }
+  .chip[data-token='--charcoal'] { background: var(--charcoal); }
+  .chip[data-token='--open'] { background: var(--open); }
+  .chip[data-token='--closed'] { background: var(--closed); }
+  .spaces {
+    display: grid;
+    gap: var(--s-2);
+  }
+  .spaces div {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+  }
+  .bar {
+    height: 12px;
+    background: var(--brass);
+    border-radius: 2px;
+  }
+  .bar[data-w='4'] { width: 4px; }
+  .bar[data-w='8'] { width: 8px; }
+  .bar[data-w='12'] { width: 12px; }
+  .bar[data-w='16'] { width: 16px; }
+  .bar[data-w='24'] { width: 24px; }
+  .bar[data-w='32'] { width: 32px; }
+  .bar[data-w='48'] { width: 48px; }
+  .bar[data-w='64'] { width: 64px; }
+  .bar[data-w='96'] { width: 96px; }
+  .hours-demo {
+    max-width: 480px;
+  }
+</style>

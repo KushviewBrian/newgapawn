@@ -1,0 +1,72 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { business, fullAddress } from '../data/site';
+
+const crumbs = [{ name: 'Privacy', path: '/privacy/' }];
+const updated = 'October 29, 2026';
+---
+
+<Base title="Privacy Policy" description="How New Georgia Pawn handles the information you send through this website." og="home" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Privacy" title="Privacy policy" lede={`Last updated ${updated}.`} crumbs={crumbs} />
+  <section class="section">
+    <div class="container">
+      <div class="prose">
+        <p>
+          This policy covers this website, operated by {business.legalName} ("we", "us"). It explains what we collect online, why, and
+          what we do with it. It doesn't replace the privacy notice you receive with a pawn transaction in the store.
+        </p>
+
+        <h2>What we collect</h2>
+        <h3>When you send the Get an Offer form</h3>
+        <p>
+          Your name, phone number, optional email, the item details you type, and up to three photos. We use these only to reply to you
+          about that item. The form is delivered to the shop by email and isn't added to any mailing list.
+        </p>
+        <p>Please don't send photos of IDs, pawn tickets, or other personal documents through the form.</p>
+
+        <h3>When you browse the site</h3>
+        <p>
+          We use Cloudflare Web Analytics, which counts page visits without cookies and without tracking you across other websites. We
+          also count clicks on our Call, Directions, and Get an Offer buttons, along with the page they were on. These counts aren't tied
+          to your name or device.
+        </p>
+
+        <h3>Spam protection</h3>
+        <p>
+          The offer form uses Cloudflare Turnstile to tell people from bots. Turnstile processes limited technical information about
+          your browser for that purpose only. See
+          <a href="https://www.cloudflare.com/turnstile-privacy-policy/" rel="noopener">Cloudflare's Turnstile privacy notice</a>.
+        </p>
+
+        <h3>Facebook</h3>
+        <p>
+          Some pages show our public Facebook page. That box is loaded from Facebook only when you scroll to it, and Facebook's own
+          <a href="https://www.facebook.com/privacy/policy/" rel="noopener">privacy policy</a> applies to it.
+        </p>
+
+        <h2>What we don't do</h2>
+        <ul>
+          <li>We don't sell or rent your information.</li>
+          <li>We don't use advertising cookies or cross-site tracking on this site.</li>
+          <li>We don't take payments or store payment card details on this site.</li>
+        </ul>
+
+        <h2>How long we keep it</h2>
+        <p>
+          Offer requests are kept in the shop's email only as long as needed to respond and for our ordinary business records. Click
+          counts are kept as daily totals.
+        </p>
+
+        <h2>Your choices</h2>
+        <p>
+          To ask what we have about you, or to have an offer request deleted, email
+          <a href={`mailto:${business.email}`}>{business.email}</a> or call {business.phone}.
+        </p>
+
+        <h2>Contact</h2>
+        <p>{business.legalName}<br />{fullAddress}<br />{business.phone}</p>
+      </div>
+    </div>
+  </section>
+</Base>

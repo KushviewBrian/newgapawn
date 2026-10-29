@@ -1,0 +1,68 @@
+---
+/**
+ * "Open now · until 6:00 PM" pill. Computed in the visitor's browser on
+ * Eastern Time from the hours baked into the page; without JavaScript it
+ * stays hidden and the full hours table does the job.
+ */
+interface Props {
+  tone?: 'light' | 'dark';
+}
+const { tone = 'light' } = Astro.props;
+---
+
+<span class:list={['open-badge', tone]} data-open-badge aria-live="polite">
+  <span class="dot" aria-hidden="true"></span>
+  <span class="text"></span>
+</span>
+
+<script>
+  import { currentStatus, type HoursData } from '../lib/hours';
+
+  const data: HoursData = JSON.parse(document.getElementById('hours-data')!.textContent!);
+
+  function update() {
+    const status = currentStatus(data);
+    document.querySelectorAll<HTMLElement>('[data-open-badge]').forEach((el) => {
+      el.dataset.state = status.open ? 'open' : 'closed';
+      el.querySelector('.text')!.textContent = status.detail ? `${status.label} (${status.detail})` : status.label;
+    });
+  }
+  update();
+  setInterval(update, 60_000);
+</script>
+
+<style>
+  .open-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 32px;
+    padding: 4px 14px 4px 12px;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.3;
+    visibility: hidden;
+  }
+  .open-badge[data-state] {
+    visibility: visible;
+  }
+  .open-badge[data-state='open'] {
+    background: var(--open-bg);
+    color: var(--open);
+  }
+  .open-badge[data-state='closed'] {
+    background: var(--closed-bg);
+    color: var(--closed);
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    flex: none;
+  }
+  .open-badge[data-state='open'] .dot {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--open) 18%, transparent);
+  }
+</style>

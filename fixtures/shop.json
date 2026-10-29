@@ -1,0 +1,8 @@
+{
+  "_note": "Sample data for previewing the closure banner and special hours. Enable with SHOP_FIXTURES=1. Dates are days from today.",
+  "closures": [
+    { "startIn": 3, "reason": "a family event" },
+    { "startIn": 20, "endIn": 21, "reason": "inventory", "opens": "10:00", "closes": "14:00" }
+  ],
+  "banners": []
+}

@@ -1,0 +1,113 @@
+---
+import '@fontsource-variable/inter/wght.css';
+import '@fontsource/playfair-display/latin-600.css';
+import '@fontsource/playfair-display/latin-600-italic.css';
+import playfairUrl from '@fontsource/playfair-display/files/playfair-display-latin-600-normal.woff2?url';
+import interUrl from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import '../styles/global.css';
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Banner from '../components/Banner.astro';
+import ActionBar from '../components/ActionBar.astro';
+import { business } from '../data/site';
+import { localBusinessSchema, breadcrumbSchema, type Crumb } from '../lib/schema';
+import { hoursData } from '../lib/shop';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Slug of the generated share image in /og/ (defaults to "home"). */
+  og?: string;
+  noindex?: boolean;
+  /** Extra JSON-LD objects for this page. */
+  schema?: object[];
+  /** Include the full PawnShop record (Home, Visit, About). */
+  businessSchema?: boolean;
+  breadcrumbs?: Crumb[];
+  variant?: 'full' | 'deal';
+}
+
+const {
+  title,
+  description,
+  og = 'home',
+  noindex = false,
+  schema = [],
+  businessSchema = false,
+  breadcrumbs,
+  variant = 'full',
+} = Astro.props;
+
+const site = Astro.site!;
+const canonical = new URL(Astro.url.pathname, site).href;
+const fullTitle = Astro.url.pathname === '/' ? title : `${title} | ${business.name}`;
+const ogImage = new URL(`/og/${og}.png`, site).href;
+
+const jsonLd = [
+  ...(businessSchema ? [localBusinessSchema(site)] : []),
+  ...(breadcrumbs ? [breadcrumbSchema(site, breadcrumbs)] : []),
+  ...schema,
+];
+const beacon = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <meta name="theme-color" content="#faf8f3" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preload" href={playfairUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={interUrl} as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={business.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {jsonLd.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    {variant === 'full' && <Banner />}
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer variant={variant} />
+    <ActionBar />
+
+    <script type="application/json" id="hours-data" set:html={JSON.stringify(hoursData)} />
+    <script>
+      import '../scripts/site';
+    </script>
+    {
+      beacon && (
+        <script
+          is:inline
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: beacon })}
+        />
+      )
+    }
+  </body>
+</html>

@@ -1,0 +1,170 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Faq from '../components/Faq.astro';
+import OfferBand from '../components/OfferBand.astro';
+import ServiceCards from '../components/ServiceCards.astro';
+import { business } from '../data/site';
+import { getPhoto, photoAlt } from '../lib/photos';
+import { serviceSchema } from '../lib/schema';
+
+const title = 'Sell Gold & Silver in Dallas, GA';
+const description =
+  'Sell gold and silver jewelry, coins, bullion, and scrap in Dallas, GA. Tested and weighed in front of you, priced on the daily market, cash on the spot.';
+const crumbs = [{ name: 'Sell Gold & Silver', path: '/sell-gold/' }];
+
+const buy = [
+  { title: 'Gold jewelry', text: 'Rings, chains, bracelets, earrings, and class rings, including broken or single pieces.' },
+  { title: 'Silver jewelry and flatware', text: 'Sterling jewelry, flatware, and serving pieces marked sterling or 925.' },
+  { title: 'Coins', text: 'Gold and silver coins, including pre-1965 US dimes, quarters, and halves.' },
+  { title: 'Bullion', text: 'Gold and silver bars and rounds from recognized mints and refiners.' },
+  { title: 'Scrap', text: 'Dental gold, broken pieces, and anything else that contains gold or silver.' },
+];
+
+const faq = [
+  {
+    q: 'Do I need an appointment?',
+    a: '<p>No. Walk in any time during store hours. If you have a large collection, a quick call ahead helps us make time for you.</p>',
+  },
+  {
+    q: 'How do you decide what to pay?',
+    a: '<p>We test the metal to confirm its purity, weigh it, and work from that day\'s gold or silver market price. Some pieces, like certain coins and branded jewelry, can be worth more than their metal. <a href="/guides/how-gold-is-priced-when-you-sell/">How gold is priced</a> explains the details.</p>',
+  },
+  {
+    q: 'What do I need to bring?',
+    a: '<p>The items and a valid government-issued photo ID. Georgia requires us to record ID for every purchase.</p>',
+  },
+  {
+    q: "What if I'm not sure it's real gold?",
+    a: "<p>Bring it anyway. We'll test it in front of you at no charge and tell you what it is, whether or not you sell.</p>",
+  },
+  {
+    q: 'Can I pawn my gold instead of selling it?',
+    a: '<p>Yes. If you want the piece back later, a <a href="/pawn-loans/">pawn loan</a> gets you cash now and lets you pick it up when you repay.</p>',
+  },
+];
+---
+
+<Base
+  title={title}
+  description={description}
+  og="sell-gold"
+  breadcrumbs={crumbs}
+  schema={[serviceSchema(Astro.site!, { name: 'Gold and silver buying', path: '/sell-gold/', description })]}
+>
+  <PageHero
+    eyebrow="We buy gold & silver"
+    title="Cash for gold and silver, tested in front of you"
+    lede="Jewelry, coins, bullion, and scrap. We test and weigh every piece where you can see it, price it on today's market, and pay you on the spot."
+    crumbs={crumbs}
+    photo={getPhoto('gold-case')}
+    photoAlt={photoAlt['gold-case']}
+  >
+    <div class="btn-row btn-row--stack-sm">
+      <a class="btn btn--ink" href="/get-an-offer/?type=sell" data-track="offer-cta" data-track-where="gold-hero">Get an Offer</a>
+      <a class="btn btn--brass" href={`tel:${business.phoneE164}`} data-track="call" data-track-where="gold-hero">
+        <Icon name="phone" /> Call {business.phone}
+      </a>
+    </div>
+  </PageHero>
+
+  <section class="section" aria-labelledby="buy-h">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">What we buy</span>
+        <h2 id="buy-h">Gold and silver in any form</h2>
+      </div>
+      <ul class="grid grid-3 buy" role="list">
+        {
+          buy.map((b) => (
+            <li class="card">
+              <h3>{b.title}</h3>
+              <p class="muted small">{b.text}</p>
+            </li>
+          ))
+        }
+        <li class="card card--accent">
+          <h3>Not sure what you have?</h3>
+          <p class="small">Bring it in. Testing is free, and there's no obligation to sell.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--band" aria-labelledby="visit-h">
+    <div class="container split">
+      <div class="stack">
+        <span class="eyebrow">How selling works</span>
+        <h2 id="visit-h">A few minutes at the counter</h2>
+        <p class="muted">No appointment needed. Here's what happens when you come in.</p>
+      </div>
+      <ol class="steps">
+        <li>
+          <div>
+            <h3>We test the metal</h3>
+            <p class="muted">An acid or electronic test confirms the karat or purity, right in front of you.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>We weigh it</h3>
+            <p class="muted">On a certified scale you can see, with the weight shown before we talk numbers.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>You get an offer</h3>
+            <p class="muted">Based on today's market price for gold or silver. Take the cash, or think it over.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="bring-h">
+    <div class="container split split--center">
+      <div class="stack">
+        <span class="eyebrow">What to bring</span>
+        <h2 id="bring-h">Your items and a photo ID</h2>
+        <p class="muted">
+          Georgia requires a valid government-issued photo ID for every purchase. Bring any certificates or original boxes too. They can
+          matter for coins and branded pieces.
+        </p>
+      </div>
+      <ul class="checks">
+        <li>Driver's license or other state or federal photo ID</li>
+        <li>The jewelry, coins, or bullion you want to sell</li>
+        <li>Certificates, receipts, or boxes, if you have them</li>
+      </ul>
+    </div>
+  </section>
+
+  <OfferBand intent="sell" heading="Get a starting offer before you drive over" />
+
+  <Faq items={faq} />
+
+  <section class="section section--band" aria-labelledby="more-h">
+    <div class="container">
+      <h2 id="more-h" class="section-head">More ways we can help</h2>
+      <ServiceCards exclude="gold" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .buy {
+    list-style: none;
+    padding: 0;
+  }
+  .buy .card {
+    display: grid;
+    gap: var(--s-2);
+    align-content: start;
+  }
+  .card--accent {
+    background: var(--charcoal);
+    border-color: var(--charcoal);
+    color: var(--on-dark);
+  }
+</style>

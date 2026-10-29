@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { business } from '../data/site';
+
+const crumbs = [{ name: 'Store Policies', path: '/store-policies/' }];
+
+/**
+ * Fill these in from the owner intake (returns, holds, layaway, warranties).
+ * Leave a policy's text empty to show "Ask us at the counter" for it.
+ */
+const policies: { title: string; text: string }[] = [
+  { title: 'Returns and exchanges', text: '' },
+  { title: 'Holds', text: '' },
+  { title: 'Layaway', text: '' },
+  { title: 'Warranties', text: '' },
+];
+---
+
+<Base title="Store Policies" description="Returns, holds, layaway, and warranty policies at New Georgia Pawn in Dallas, GA." og="home" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Store policies" title="How we handle returns, holds, and layaway" crumbs={crumbs} />
+  <section class="section">
+    <div class="container">
+      <dl class="policies">
+        {
+          policies.map((p) => (
+            <div class="card">
+              <dt class="h3">{p.title}</dt>
+              <dd class="muted">{p.text || 'Ask us at the counter or give us a call; we’re happy to explain.'}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <div class="note always">
+        <p>
+          <strong>Firearms:</strong> sold in store only, to buyers who complete ATF Form 4473 and pass the federal background check.
+        </p>
+      </div>
+      <div class="btn-row cta">
+        <a class="btn btn--brass" href={`tel:${business.phoneE164}`} data-track="call" data-track-where="policies">
+          <Icon name="phone" /> Questions? {business.phone}
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .policies {
+    display: grid;
+    gap: var(--s-4);
+  }
+  @media (min-width: 768px) {
+    .policies {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .policies .card {
+    display: grid;
+    gap: var(--s-2);
+  }
+  .always {
+    margin-top: var(--s-6);
+  }
+  .cta {
+    margin-top: var(--s-6);
+  }
+</style>
