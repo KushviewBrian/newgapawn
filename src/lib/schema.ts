@@ -21,7 +21,7 @@ export function localBusinessSchema(site: URL) {
     telephone: business.phoneE164,
     email: business.email,
     foundingDate: business.founded,
-    image: new URL('/og/home.png', site).href,
+    image: [new URL('/storefront.jpg', site).href, new URL('/og/home.png', site).href],
     logo: new URL('/apple-touch-icon.png', site).href,
     priceRange: '$',
     address: {

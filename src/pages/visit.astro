@@ -4,11 +4,15 @@ import VisitBlock from '../components/VisitBlock.astro';
 import OfferBand from '../components/OfferBand.astro';
 import FacebookFeed from '../components/FacebookFeed.astro';
 import Icon from '../components/Icon.astro';
+import { Picture } from 'astro:assets';
+import { getPhoto, photoAlt } from '../lib/photos';
 import { business } from '../data/site';
 
 const title = 'Hours & Directions, Villa Rica Hwy';
 const description =
   'New Georgia Pawn, 7029 Villa Rica Hwy (GA-61), Dallas, GA 30157. Store hours, phone, and directions from Dallas, Hiram, Villa Rica, and Douglasville.';
+
+const storefront = getPhoto('storefront');
 
 const routes = [
   {
@@ -32,6 +36,34 @@ const routes = [
 
 <Base title={title} description={description} og="visit" businessSchema breadcrumbs={[{ name: 'Visit', path: '/visit/' }]}>
   <VisitBlock headingLevel="h1" eyebrow="Visit New Georgia Pawn" />
+
+  {
+    storefront && (
+      <section class="section" aria-labelledby="look-h">
+        <div class="container split split--center">
+          <Picture
+            formats={['avif', 'webp']}
+            src={storefront}
+            alt={photoAlt.storefront}
+            widths={[480, 800, 1200]}
+            sizes="(min-width: 1024px) 600px, 100vw"
+            class="store-photo"
+          />
+          <div class="stack">
+            <span class="eyebrow">Look for this building</span>
+            <h2 id="look-h">Gray building, stone base, big sign out front</h2>
+            <p class="muted">
+              We're right on Villa Rica Highway (GA-61). Look for the gray metal building with the stone front and the New Georgia
+              Pawn Shop sign over the door.
+            </p>
+            <ul class="checks">
+              <li>Parking right out front, including an accessible space</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   <section class="section section--band" aria-labelledby="dir-h">
     <div class="container">
@@ -97,6 +129,12 @@ const routes = [
 </Base>
 
 <style>
+  .store-photo {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
   .routes,
   .contact {
     list-style: none;

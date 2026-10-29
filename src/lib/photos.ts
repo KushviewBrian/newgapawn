@@ -23,7 +23,7 @@ export function getPhoto(name: PhotoName): ImageMetadata | undefined {
 }
 
 export const photoAlt: Record<PhotoName, string> = {
-  storefront: 'The New Georgia Pawn storefront on Villa Rica Highway in Dallas, GA',
+  storefront: 'The New Georgia Pawn Shop storefront on Villa Rica Highway in Dallas, GA: a gray metal building with a stone base and the shop sign over the door',
   counter: 'The front counter at New Georgia Pawn',
   'gold-case': 'Gold and silver jewelry in the display case at New Georgia Pawn',
   'gun-wall': 'Rifles and shotguns on the wall at New Georgia Pawn',
