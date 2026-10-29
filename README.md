@@ -92,6 +92,23 @@ Before deploying, in the Cloudflare dashboard:
 - Update `routes`, `SITE_URL`, and `MAIL_FROM` in `wrangler.toml` if the domain
   isn't `newgeorgiapawn.com`.
 
+## Logo and brand files
+
+The mark is the pawnbroker's three balls on an arched hanger, with the
+site's brass diamond as the hook. It's drawn in `src/components/LogoMark.astro`
+for the site; `node scripts/make-brand.mjs` regenerates every other copy:
+
+| File | Use |
+| --- | --- |
+| `public/brand/logo-horizontal(.svg/.png)` and `-reversed.svg` | Letterhead, invoices, signage, light or dark backgrounds |
+| `public/brand/logo-stacked(.svg/.png)` and `-reversed.svg` | Square spaces, window decals, business cards |
+| `public/brand/mark(.svg/.png)` and `mark-reversed.svg` | The symbol alone |
+| `public/brand/facebook-profile.png` | 1080 × 1080 profile picture for Facebook and Google |
+| `public/favicon.svg`, `favicon-32.png`, `apple-touch-icon.png`, `icon-*.png` | Browser and phone icons |
+
+Text in the SVG lockups is outlined, so printers don't need the fonts.
+Colors: brass `#a8842c`, highlight `#d4b46a`, charcoal `#24231f`, cream `#f4f1ea`.
+
 ## Photos
 
 Drop the on-site photos into `src/assets/photos/` named `storefront`,

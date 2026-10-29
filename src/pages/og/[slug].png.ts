@@ -27,6 +27,7 @@ export const getStaticPaths: GetStaticPaths = () => Object.keys(pages).map((slug
 
 const require = createRequire(import.meta.url);
 const font = (path: string) => readFile(require.resolve(path));
+const markReversed = await readFile('public/brand/mark-reversed.svg'); // build runs from the project root
 const fontsPromise = Promise.all([
   font('@fontsource/playfair-display/files/playfair-display-latin-600-normal.woff'),
   font('@fontsource/inter/files/inter-latin-500-normal.woff'),
@@ -46,8 +47,11 @@ export const GET: APIRoute = async ({ params }) => {
   const page = pages[params.slug as string];
   const [playfair, inter500, inter600] = await fontsPromise;
 
-  const diamond = (size: number, color: string) =>
-    h('div', { width: size, height: size, background: color, transform: 'rotate(45deg)' });
+  // The logo mark, reversed for the dark card (same file as public/brand/mark-reversed.svg).
+  const mark = (size: number) => ({
+    type: 'img',
+    props: { src: `data:image/svg+xml;base64,${markReversed.toString('base64')}`, width: size, height: size },
+  });
 
   const tree = h(
     'div',
@@ -60,8 +64,9 @@ export const GET: APIRoute = async ({ params }) => {
     h(
       'div',
       {
-        width: 1144,
-        height: 574,
+        // Content box: 1144 × 574 frame minus 2 px border and 56/64 px padding.
+        width: 1012,
+        height: 458,
         flexDirection: 'column',
         justifyContent: 'space-between',
         border: `2px solid ${C.brass}`,
@@ -71,7 +76,7 @@ export const GET: APIRoute = async ({ params }) => {
       h(
         'div',
         { alignItems: 'center', gap: 18 },
-        diamond(22, C.brass),
+        mark(64),
         h('div', { fontFamily: 'Playfair', fontSize: 40, color: C.paper }, business.name),
       ),
       h(
