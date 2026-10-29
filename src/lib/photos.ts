@@ -10,8 +10,8 @@
  *   guitars      Home gallery (4:3)
  *   gold         We Buy Gold & Silver hero, Home gallery (portrait)
  *   silver       We Buy Gold & Silver, what to bring (portrait)
- *   rifles       Firearms hero, Home gallery (portrait)
- *   gun-wall     Firearms, federal rules section (portrait)
+ *   gun-wall     Firearms hero (portrait)
+ *   rifles       Firearms, federal rules section; Home gallery (portrait)
  *   owner        About (4:5)
  */
 import type { ImageMetadata } from 'astro';

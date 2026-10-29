@@ -13,7 +13,7 @@ const title = 'Gun Shop in Dallas, GA';
 const description =
   'Buy, sell, and trade handguns, rifles, and shotguns at New Georgia Pawn in Dallas, GA. Licensed FFL dealer. Trades accepted for guns, gold, and silver.';
 const crumbs = [{ name: 'Firearms', path: '/firearms/' }];
-const gunWall = getPhoto('gun-wall');
+const rifles = getPhoto('rifles');
 
 const faq = [
   {
@@ -47,8 +47,8 @@ const faq = [
     title="Buy, sell, and trade with a licensed dealer"
     lede="Handguns, rifles, and shotguns, with new arrivals all the time. We buy guns outright and take trades for guns, gold, or silver."
     crumbs={crumbs}
-    photo={getPhoto('rifles')}
-    photoAlt={photoAlt.rifles}
+    photo={getPhoto('gun-wall')}
+    photoAlt={photoAlt['gun-wall']}
     portrait
   >
     <div class="btn-row btn-row--stack-sm">
@@ -99,11 +99,11 @@ const faq = [
           Every firearm we sell goes through the same federal process. It usually takes a few minutes at the counter.
         </p>
         {
-          gunWall && (
+          rifles && (
             <Picture
               formats={['avif', 'webp']}
-              src={gunWall}
-              alt={photoAlt['gun-wall']}
+              src={rifles}
+              alt={photoAlt.rifles}
               widths={[400, 600, 900]}
               sizes="(min-width: 1024px) 560px, 100vw"
               class="wall-photo"
@@ -175,7 +175,7 @@ const faq = [
     width: 100%;
     aspect-ratio: 4 / 3;
     object-fit: cover;
-    object-position: 50% 20%;
+    object-position: 50% 62%;
     border-radius: var(--radius);
     margin-top: var(--s-5) !important;
   }
@@ -183,7 +183,7 @@ const faq = [
     .wall-photo {
       aspect-ratio: 1 / 1;
       max-width: 440px;
-      object-position: 50% 40%;
+      object-position: 50% 58%;
     }
   }
   .ways {
