@@ -10,6 +10,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Banner from '../components/Banner.astro';
 import ActionBar from '../components/ActionBar.astro';
+import TopBar from '../components/TopBar.astro';
 import { business } from '../data/site';
 import { localBusinessSchema, breadcrumbSchema, type Crumb } from '../lib/schema';
 import { hoursData } from '../lib/shop';
@@ -88,6 +89,7 @@ const beacon = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     {variant === 'full' && <Banner />}
+    {variant === 'full' && <TopBar />}
     <Header />
     <main id="main">
       <slot />
@@ -98,6 +100,7 @@ const beacon = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
     <script type="application/json" id="hours-data" set:html={JSON.stringify(hoursData)} />
     <script>
       import '../scripts/site';
+      import '../scripts/spot';
     </script>
     {
       beacon && (

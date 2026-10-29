@@ -1,0 +1,248 @@
+---
+/**
+ * Sell Gold price board: live gold and silver spot per troy ounce, plus melt
+ * value per gram at common purities. Filled by src/scripts/spot.ts. Always
+ * labeled as market value, not the shop's buy price.
+ */
+const purities = [
+  { metal: 'gold', label: '10K gold', purity: 0.417 },
+  { metal: 'gold', label: '14K gold', purity: 0.585 },
+  { metal: 'gold', label: '18K gold', purity: 0.75 },
+  { metal: 'gold', label: '22K gold', purity: 0.916 },
+  { metal: 'silver', label: 'Sterling silver (925)', purity: 0.925 },
+  { metal: 'silver', label: 'US silver coins, 1964 and earlier', purity: 0.9 },
+] as const;
+---
+
+<section class="section board-section" aria-labelledby="spot-h" data-spot>
+  <div class="container">
+    <div class="board">
+      <div class="head">
+        <div class="stack">
+          <span class="eyebrow live"><span class="dot" aria-hidden="true"></span> Live market prices</span>
+          <h2 id="spot-h">Today's gold and silver price</h2>
+          <p class="intro">
+            The spot price is the market price of one troy ounce of pure metal. Melt value is what the pure metal in one gram of your
+            piece is worth at that price. Both are market numbers, not our buy price: your offer depends on testing, weight, and the
+            piece itself.
+          </p>
+        </div>
+        <div class="spots">
+          <div class="spot gold">
+            <span class="name">Gold</span>
+            <span class="big" data-price="gold">—</span>
+            <span class="unit">per troy ounce</span>
+          </div>
+          <div class="spot silver">
+            <span class="name">Silver</span>
+            <span class="big" data-price="silver">—</span>
+            <span class="unit">per troy ounce</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="melt">
+        <table>
+          <caption>Melt value per gram</caption>
+          <thead>
+            <tr><th scope="col">Purity</th><th scope="col">Pure</th><th scope="col">Per gram</th></tr>
+          </thead>
+          <tbody>
+            {
+              purities.map((p) => (
+                <tr class={p.metal}>
+                  <th scope="row">{p.label}</th>
+                  <td>{(p.purity * 100).toFixed(1)}%</td>
+                  <td class="num" data-melt={p.metal} data-purity={p.purity}>
+                    —
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+        <div class="foot">
+          <span data-updated>Loading live prices…</span>
+          <a class="link-arrow" href="/guides/how-gold-is-priced-when-you-sell/">How gold is priced when you sell</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .board {
+    display: grid;
+    background: var(--charcoal);
+    color: var(--on-dark);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.04),
+      0 20px 40px -24px rgb(28 28 26 / 0.45);
+  }
+  .head {
+    display: grid;
+    gap: var(--s-6);
+    padding: clamp(var(--s-5), 4vw, var(--s-7));
+  }
+  .head h2 {
+    color: var(--on-dark);
+  }
+  .live {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--brass-light);
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--stone-strong);
+  }
+  [data-state='live'] .dot {
+    background: #6fbf7e;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    [data-state='live'] .dot {
+      animation: blink 2.4s ease-in-out infinite;
+    }
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0.35;
+    }
+  }
+  .intro {
+    color: var(--on-dark-muted);
+    max-width: 52ch;
+  }
+  .spots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-4);
+    align-content: start;
+  }
+  .spot {
+    display: grid;
+    gap: 2px;
+    padding: var(--s-5);
+    border-radius: var(--radius);
+    background: rgb(255 255 255 / 0.04);
+    border: 1px solid rgb(255 255 255 / 0.08);
+    border-top: 3px solid var(--brass);
+  }
+  .spot.silver {
+    border-top-color: #b8bec4;
+  }
+  .name {
+    font-size: var(--text-label);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--on-dark-muted);
+  }
+  .big {
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 1.3rem + 1.8vw, 2.75rem);
+    font-weight: 600;
+    line-height: 1.15;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  .gold .big {
+    color: var(--brass-light);
+  }
+  .unit {
+    font-size: 0.8125rem;
+    color: var(--on-dark-muted);
+  }
+
+  .melt {
+    padding: var(--s-5) clamp(var(--s-5), 4vw, var(--s-7)) var(--s-6);
+    background: var(--card);
+    color: var(--ink);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-small);
+  }
+  caption {
+    text-align: left;
+    padding-bottom: var(--s-3);
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  th,
+  td {
+    padding: 10px 0;
+    white-space: nowrap;
+    border-bottom: var(--hairline);
+    text-align: left;
+    font-weight: 400;
+  }
+  thead th {
+    font-size: var(--text-label);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--stone-strong);
+  }
+  td:nth-child(2) {
+    color: var(--muted);
+  }
+  td,
+  thead th:not(:first-child) {
+    padding-left: var(--s-5);
+    text-align: right;
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  tbody th {
+    white-space: normal;
+  }
+  tbody th::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 10px;
+    border-radius: 50%;
+    background: var(--brass);
+    vertical-align: 1px;
+  }
+  tbody tr.silver th::before {
+    background: #9aa0a6;
+  }
+  .num {
+    font-weight: 600;
+    min-width: 7ch;
+  }
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2) var(--s-5);
+    margin-top: var(--s-3);
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+  @media (min-width: 1024px) {
+    .board {
+      grid-template-columns: 1.15fr 1fr;
+    }
+    .head {
+      align-content: space-between;
+    }
+    .melt {
+      padding-top: clamp(var(--s-5), 4vw, var(--s-7));
+    }
+  }
+  @media (max-width: 479px) {
+    .spots {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

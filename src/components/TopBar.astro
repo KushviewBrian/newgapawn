@@ -1,0 +1,52 @@
+---
+/** Slim bar above the header on desktop: live metal prices, address, and phone. */
+import SpotTicker from './SpotTicker.astro';
+import { business, mapsLinks } from '../data/site';
+---
+
+<div class="top-bar">
+  <div class="container inner">
+    <SpotTicker />
+    <span class="contact">
+      <a href={mapsLinks.google} data-directions={mapsLinks.apple} data-track="directions" data-track-where="top-bar" rel="noopener">
+        {business.address.street}, {business.address.city}
+      </a>
+      <span aria-hidden="true">·</span>
+      <a href={`tel:${business.phoneE164}`} data-track="call" data-track-where="top-bar">{business.phone}</a>
+    </span>
+  </div>
+</div>
+
+<style>
+  .top-bar {
+    display: none;
+    background: var(--charcoal);
+    color: var(--on-dark);
+  }
+  @media (min-width: 1024px) {
+    .top-bar {
+      display: block;
+    }
+  }
+  .inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-5);
+    min-height: 36px;
+  }
+  .contact {
+    display: inline-flex;
+    gap: var(--s-2);
+    font-size: 0.8125rem;
+    color: var(--on-dark-muted);
+  }
+  .contact a {
+    color: var(--on-dark-muted);
+    text-decoration: none;
+  }
+  .contact a:hover {
+    color: var(--on-dark);
+    text-decoration: underline;
+  }
+</style>

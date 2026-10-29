@@ -1,5 +1,6 @@
 ---
 import Wordmark from './Wordmark.astro';
+import SpotTicker from './SpotTicker.astro';
 import { business, fullAddress } from '../data/site';
 
 interface Props {
@@ -36,6 +37,7 @@ const columns = [
           <a href={`tel:${business.phoneE164}`} data-track="call" data-track-where="footer">{business.phone}</a><br />
           <a href={`mailto:${business.email}`}>{business.email}</a>
         </address>
+        {variant === 'full' && <SpotTicker class="footer-ticker" />}
       </div>
       {
         variant === 'full' ? (
@@ -120,6 +122,9 @@ const columns = [
     margin-top: var(--s-4);
     font-style: normal;
     line-height: 1.8;
+  }
+  .id :global(.footer-ticker) {
+    margin-top: var(--s-4);
   }
   address a {
     color: var(--brass-light);

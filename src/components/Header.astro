@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro';
 import Wordmark from './Wordmark.astro';
+import SpotTicker from './SpotTicker.astro';
 import { business, nav } from '../data/site';
 
 const path = Astro.url.pathname;
@@ -60,6 +61,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
         <a class="btn btn--brass btn--block" href={`tel:${business.phoneE164}`} data-track="call" data-track-where="menu">
           <Icon name="phone" /> Call {business.phone}
         </a>
+        <SpotTicker tone="light" class="menu-ticker" />
       </div>
     </nav>
   </div>
@@ -194,6 +196,8 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     color: var(--brass-deep);
   }
   .sheet-actions {
+    display: grid;
+    gap: var(--s-4);
     padding-top: var(--s-4);
   }
 </style>

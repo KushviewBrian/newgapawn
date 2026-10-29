@@ -1,0 +1,90 @@
+---
+/**
+ * Small live gold and silver price indicator for the header bar, footer,
+ * and phone menu. Filled by src/scripts/spot.ts; links to the Sell Gold
+ * price board.
+ */
+interface Props {
+  tone?: 'dark' | 'light';
+  class?: string;
+}
+const { tone = 'dark', class: className } = Astro.props;
+---
+
+<a class:list={['ticker', tone, className]} href="/sell-gold/#spot-h" data-spot aria-label="Live gold and silver spot prices">
+  <span class="dot" aria-hidden="true"></span>
+  <span class="label">Spot</span>
+  <span class="metal"><span class="name">Gold</span> <span class="num gold" data-price="gold">—</span></span>
+  <span class="metal"><span class="name">Silver</span> <span class="num silver" data-price="silver">—</span></span>
+</a>
+
+<style>
+  .ticker {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px 12px;
+    flex-wrap: wrap;
+    min-height: 32px;
+    font-size: 0.8125rem;
+    text-decoration: none;
+    color: inherit;
+  }
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--stone-strong);
+    flex: none;
+  }
+  [data-state='live'] .dot {
+    background: #6fbf7e;
+  }
+  .light[data-state='live'] .dot {
+    background: var(--open);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    [data-state='live'] .dot {
+      animation: blink 2.4s ease-in-out infinite;
+    }
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0.35;
+    }
+  }
+  .label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--brass-light);
+  }
+  .light .label {
+    color: var(--brass-deep);
+  }
+  .metal {
+    white-space: nowrap;
+  }
+  .name {
+    color: var(--on-dark-muted);
+  }
+  .light .name {
+    color: var(--muted);
+  }
+  .num {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  .num.gold {
+    display: inline-block;
+    min-width: 9ch;
+  }
+  .num.silver {
+    display: inline-block;
+    min-width: 6ch;
+  }
+  .ticker:hover .num {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

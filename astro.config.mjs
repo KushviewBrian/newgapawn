@@ -26,7 +26,7 @@ const CSP = (scriptHashes) =>
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: https://*.facebook.com https://*.fbcdn.net",
     "font-src 'self'",
-    "connect-src 'self' https://cloudflareinsights.com https://*.facebook.com",
+    "connect-src 'self' https://cloudflareinsights.com https://*.facebook.com https://api.gold-api.com",
     'frame-src https://*.facebook.com https://challenges.cloudflare.com',
     "form-action 'self'",
     "base-uri 'self'",

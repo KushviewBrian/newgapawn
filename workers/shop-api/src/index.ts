@@ -4,6 +4,7 @@
  *   POST /api/offer    Get an Offer form → Turnstile check → email to the shop
  *   POST /api/track    click counts (call, directions, offer) → D1 daily totals
  *   GET  /api/publish  owner's "Publish now" link → rebuild the site
+ *   GET  /api/spot     live gold and silver spot prices (gold-api.com, cached 30 s)
  *   cron 0 *\/3 * * *  rebuild (fresh Sheet data) + closure reminders
  *   cron 0 13 1 * *    monthly click summary to the shop
  */
@@ -228,6 +229,40 @@ async function handlePublish(request: Request, env: Env): Promise<Response> {
   return page('Publishing your changes', 'The website will show your Sheet edits within a few minutes. You can close this page.');
 }
 
+/* ---------------------------------------------------------------- spot prices */
+
+const SPOT_TTL_S = 30; // gold-api.com updates every 30 s and asks callers to cache that long
+
+/**
+ * Gold and silver spot prices for the site's live price panel. One upstream
+ * call per metal per 30 s, shared by every visitor through the edge cache.
+ */
+async function handleSpot(request: Request, ctx: ExecutionContext): Promise<Response> {
+  const cache = caches.default;
+  const key = new Request(new URL('/api/spot', request.url).href);
+  const hit = await cache.match(key);
+  if (hit) return hit;
+
+  try {
+    const [gold, silver] = await Promise.all(
+      ['XAU', 'XAG'].map(async (symbol) => {
+        const res = await fetch(`https://api.gold-api.com/price/${symbol}`);
+        if (!res.ok) throw new Error(`${symbol} ${res.status}`);
+        const { price, updatedAt } = (await res.json()) as { price: number; updatedAt: string };
+        if (!(price > 0)) throw new Error(`${symbol} bad price`);
+        return { price, updatedAt };
+      }),
+    );
+    const response = new Response(JSON.stringify({ gold, silver, source: 'gold-api.com' }), {
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': `public, max-age=${SPOT_TTL_S}` },
+    });
+    ctx.waitUntil(cache.put(key, response.clone()));
+    return response;
+  } catch (e) {
+    return json({ ok: false, error: 'Spot prices unavailable' }, 502);
+  }
+}
+
 /* ---------------------------------------------------------------- scheduled */
 
 /** Emails the shop once per new closure: set the same special hours on Google. */
@@ -296,8 +331,9 @@ async function monthlySummary(env: Env) {
 }
 
 export default {
-  async fetch(request, env): Promise<Response> {
+  async fetch(request, env, ctx): Promise<Response> {
     const { pathname } = new URL(request.url);
+    if (pathname === '/api/spot' && request.method === 'GET') return handleSpot(request, ctx);
     if (pathname === '/api/offer' && request.method === 'POST') return handleOffer(request, env);
     if (pathname === '/api/track' && request.method === 'POST') return handleTrack(request, env);
     if (pathname === '/api/publish' && request.method === 'GET') return handlePublish(request, env);

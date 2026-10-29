@@ -31,6 +31,7 @@ check(
   'Set PUBLIC_TURNSTILE_SITE_KEY to the real Turnstile site key (currently the test key)',
 );
 check(env.PUBLIC_CF_BEACON_TOKEN, 'Set PUBLIC_CF_BEACON_TOKEN for Cloudflare Web Analytics');
+check(env.PUBLIC_SPOT_SOURCE === 'worker', 'Set PUBLIC_SPOT_SOURCE=worker after deploying the Worker (cached gold/silver prices)');
 
 const wrangler = readFileSync('workers/shop-api/wrangler.toml', 'utf8');
 check(!wrangler.includes('REPLACE_WITH_D1_DATABASE_ID'), 'Create the D1 database and put its id in workers/shop-api/wrangler.toml');
