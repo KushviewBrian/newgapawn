@@ -24,7 +24,7 @@ with sample data.
 | Pages | `src/pages/` | Home, Pawn Loans, Sell Gold, Firearms, FFL Transfers, About, Visit, Get an Offer, guides, privacy, store policies, 404, `/styleguide/` (hidden) |
 | Business facts | `src/data/site.ts` | Name, phone, address, FFL, links, review quotes, and the list of facts still to confirm |
 | Hours, closures, banner, rating | Google Sheet → `scripts/sync-data.mjs` → `src/data/generated/shop.json` | Pulled at every build. Without a Sheet, `src/data/shop.defaults.json` is used |
-| Facebook | `src/components/FacebookFeed.astro` | Meta's Page Plugin for the shop's public Page, loaded only when scrolled near |
+| Facebook | `src/components/FacebookFeed.astro` | Meta's Page Plugin for the shop's public Page, rendered by the Facebook JS SDK, which loads only when scrolled near |
 | Map | `scripts/data/osm-roads.json` → `npm run map` → `src/data/map.json` | Static SVG map drawn from OpenStreetMap data; no map scripts |
 | Share images | `src/pages/og/[slug].png.ts` | 1200 × 630 image per page, rendered at build |
 | Design tokens | `src/styles/tokens.css` | Colors, type, spacing; see `/styleguide/` |
@@ -68,7 +68,7 @@ the website.
 
 Security headers come from `public/_headers`; redirects (`/review`, `/offer`,
 `/hours`…) are written to `dist/_redirects` at build. The Content-Security-Policy
-is a `<meta>` tag Astro writes with hashes for every inline script and style.
+is appended to `dist/_headers` at build, with a hash for every inline script.
 
 ### 2. Worker (`workers/shop-api`)
 

@@ -1,9 +1,9 @@
 ---
 /**
- * The shop's public Facebook Page via Meta's Page Plugin (iframe version, no
- * Facebook SDK). The frame is only created when the section nears the
+ * The shop's public Facebook Page via Meta's Page Plugin, rendered by the
+ * Facebook JavaScript SDK. The SDK only loads when the section nears the
  * viewport, so it costs nothing on first load. Without JavaScript, or when a
- * browser blocks Facebook frames, visitors get a link to the Page instead.
+ * browser blocks Facebook, visitors get a link to the Page instead.
  */
 import Icon from './Icon.astro';
 import { business } from '../data/site';
@@ -42,58 +42,88 @@ const {
       </div>
     </div>
 
-    <div class="frame" data-fb-frame data-href={business.links.facebook}>
-      <a class="fallback" href={business.links.facebook} rel="noopener">
-        <Icon name="facebook" size={32} />
-        <strong>See our latest posts on Facebook</strong>
-        <span>New arrivals, deals, and store closures</span>
-      </a>
+    <div class="frame" data-fb-frame>
+      <div
+        class="fb-page"
+        data-href={business.links.facebook}
+        data-tabs="timeline"
+        data-small-header="true"
+        data-adapt-container-width="true"
+        data-hide-cover="false"
+        data-show-facepile="false"
+      >
+        <blockquote cite={business.links.facebook} class="fb-xfbml-parse-ignore">
+          <a class="fallback" href={business.links.facebook} rel="noopener">
+            <Icon name="facebook" size={32} />
+            <strong>See our latest posts on Facebook</strong>
+            <span>New arrivals, deals, and store closures</span>
+          </a>
+        </blockquote>
+      </div>
     </div>
   </div>
 </section>
 
 <script>
-  function mount(frame: HTMLElement) {
-    const width = Math.max(180, Math.min(500, Math.floor(frame.clientWidth)));
-    const height = Math.max(70, Math.floor(frame.clientHeight));
-    const params = new URLSearchParams({
-      href: frame.dataset.href!,
-      tabs: 'timeline',
-      width: String(width),
-      height: String(height),
-      small_header: 'true',
-      adapt_container_width: 'true',
-      hide_cover: 'false',
-      show_facepile: 'false',
-    });
-    const iframe = document.createElement('iframe');
-    iframe.src = `https://www.facebook.com/plugins/page.php?${params}`;
-    iframe.title = 'New Georgia Pawn on Facebook';
-    iframe.width = String(width);
-    iframe.height = String(height);
-    iframe.loading = 'lazy';
-    iframe.allow = 'encrypted-media; clipboard-write; web-share';
-    frame.querySelector('iframe')?.remove();
-    frame.append(iframe);
-    frame.dataset.width = String(width);
+  /**
+   * Loads Facebook's JavaScript SDK once, when a feed nears the viewport, and
+   * lets it render every .fb-page on the page (the same approach that works on
+   * our other sites; the bare plugin iframe can come back with an empty timeline).
+   */
+  declare global {
+    interface Window {
+      FB?: { init(o: object): void; XFBML: { parse(el?: Element): void } };
+      fbAsyncInit?: () => void;
+    }
+  }
+
+  const SDK_VERSION = 'v24.0';
+  let sdkRequested = false;
+
+  function sizeFor(frame: HTMLElement) {
+    const page = frame.querySelector<HTMLElement>('.fb-page')!;
+    page.dataset.width = String(Math.max(180, Math.min(500, Math.floor(frame.clientWidth))));
+    page.dataset.height = String(Math.max(70, Math.floor(frame.clientHeight)));
+  }
+
+  function loadSdk() {
+    if (sdkRequested) return;
+    sdkRequested = true;
+    if (!document.getElementById('fb-root')) {
+      const root = document.createElement('div');
+      root.id = 'fb-root';
+      document.body.prepend(root);
+    }
+    window.fbAsyncInit = () => window.FB!.init({ xfbml: true, version: SDK_VERSION });
+    const script = document.createElement('script');
+    script.src = 'https://connect.facebook.net/en_US/sdk.js';
+    script.async = true;
+    script.defer = true;
+    script.crossOrigin = 'anonymous';
+    document.body.append(script);
   }
 
   document.querySelectorAll<HTMLElement>('[data-fb-frame]').forEach((frame) => {
+    // Pristine copy, so the plugin can be re-rendered at a new width.
+    const template = frame.querySelector('.fb-page')!.cloneNode(true) as HTMLElement;
+
     const io = new IntersectionObserver(
       (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          io.disconnect();
-          mount(frame);
-          // The plugin only sizes itself on load; re-mount after a real width change (e.g. rotation).
-          let last = frame.clientWidth;
-          new ResizeObserver(() => {
-            const w = frame.clientWidth;
-            if (Math.abs(w - last) > 40 && (w < 500 || last < 500)) {
-              last = w;
-              mount(frame);
-            }
-          }).observe(frame);
-        }
+        if (!entries.some((e) => e.isIntersecting)) return;
+        io.disconnect();
+        sizeFor(frame);
+        loadSdk();
+
+        // The plugin sizes itself once; re-render after a real width change (e.g. rotation).
+        let last = frame.clientWidth;
+        new ResizeObserver(() => {
+          const w = frame.clientWidth;
+          if (!window.FB || Math.abs(w - last) < 40 || (w >= 500 && last >= 500)) return;
+          last = w;
+          frame.querySelector('.fb-page')!.replaceWith(template.cloneNode(true));
+          sizeFor(frame);
+          window.FB.XFBML.parse(frame);
+        }).observe(frame);
       },
       { rootMargin: '600px 0px' },
     );
@@ -127,14 +157,23 @@ const {
     background: var(--card);
     overflow: hidden;
   }
+  .frame :global(.fb-page),
+  .frame :global(.fb-page > span),
   .frame :global(iframe) {
-    position: relative;
-    z-index: 1;
     display: block;
-    width: 100%;
-    height: 100%;
+    width: 100% !important;
+    height: 100% !important;
     border: 0;
-    background: transparent;
+  }
+  .frame :global(iframe) {
+    background: #fff;
+  }
+  /* Once the SDK has rendered the plugin, hide the link fallback. */
+  .frame :global(.fb_iframe_widget .fb-xfbml-parse-ignore) {
+    display: none;
+  }
+  blockquote {
+    margin: 0;
   }
   .fallback {
     position: absolute;
