@@ -45,8 +45,9 @@ const faq = [
     title="Buy, sell, and trade with a licensed dealer"
     lede="Handguns, rifles, and shotguns, with new arrivals all the time. We buy guns outright and take trades for guns, gold, or silver."
     crumbs={crumbs}
-    photo={getPhoto('gun-wall')}
-    photoAlt={photoAlt['gun-wall']}
+    photo={getPhoto('rifles')}
+    photoAlt={photoAlt.rifles}
+    portrait
   >
     <div class="btn-row btn-row--stack-sm">
       <a class="btn btn--brass" href={`tel:${business.phoneE164}`} data-track="call" data-track-where="firearms-hero">
@@ -54,7 +55,7 @@ const faq = [
       </a>
       <a class="btn btn--outline" href="/ffl-transfers/">FFL transfers</a>
     </div>
-    <p class="small muted">Firearms are sold in store only, subject to a federal background check. FFL {business.ffl.number}.</p>
+    <p class="small muted">Firearms are sold in store only, subject to a federal background check. <span class="nowrap">FFL {business.ffl.number}</span>.</p>
   </PageHero>
 
   <section class="section" aria-labelledby="ways-h">

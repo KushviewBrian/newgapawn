@@ -1,0 +1,124 @@
+---
+/** "Take a look inside": a strip of shop photos, each linking to its service page. */
+import { Picture } from 'astro:assets';
+import { getPhoto, photoAlt, type PhotoName } from '../lib/photos';
+
+const items: { photo: PhotoName; label: string; href: string; position?: string }[] = [
+  { photo: 'tools', label: 'Tools', href: '/pawn-loans/' },
+  { photo: 'guitars', label: 'Instruments', href: '/pawn-loans/' },
+  { photo: 'gold', label: 'Gold & silver', href: '/sell-gold/' },
+  { photo: 'rifles', label: 'Firearms', href: '/firearms/', position: 'pos-low' },
+];
+const tiles = items.flatMap((i) => {
+  const img = getPhoto(i.photo);
+  return img ? [{ ...i, img }] : [];
+});
+---
+
+{
+  tiles.length >= 2 && (
+    <section class="section section--band" aria-labelledby="inside-h">
+      <div class="container">
+        <div class="section-head section-head--split">
+          <div class="stack">
+            <span class="eyebrow">On our shelves</span>
+            <h2 id="inside-h">Take a look inside</h2>
+          </div>
+          <p class="muted small note-line">Stock changes daily. Call to check on anything you see.</p>
+        </div>
+        <ul class:list={['tiles', `n${tiles.length}`]} role="list">
+          {tiles.map((t) => (
+            <li>
+              <a class="tile" href={t.href}>
+                <Picture
+                  formats={['avif', 'webp']}
+                  src={t.img}
+                  alt={photoAlt[t.photo]}
+                  widths={[320, 480, 640]}
+                  sizes="(min-width: 1024px) 270px, 50vw"
+                  class={t.position}
+                />
+                <span class="label">{t.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .note-line {
+    max-width: 30ch;
+  }
+  @media (max-width: 767px) {
+    .section-head--split {
+      grid-template-columns: 1fr;
+    }
+  }
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s-3);
+    list-style: none;
+    padding: 0;
+  }
+  @media (min-width: 1024px) {
+    .tiles.n4 {
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--s-5);
+    }
+    .tiles.n3 {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--s-5);
+    }
+  }
+  .tile {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--radius);
+    color: #fff;
+    text-decoration: none;
+    background: var(--charcoal);
+  }
+  .tile :global(img) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    transition: transform 300ms ease;
+  }
+  .tile :global(img.pos-low) {
+    object-position: 50% 62%;
+  }
+  @media (min-width: 1024px) {
+    .tile :global(img) {
+      aspect-ratio: 4 / 5;
+    }
+    .tile :global(img.pos-low) {
+      object-position: 50% 50%;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .tile:hover :global(img) {
+      transform: scale(1.04);
+    }
+  }
+  .label {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: var(--s-6) var(--s-4) var(--s-3);
+    background: linear-gradient(transparent, rgb(20 20 18 / 0.78));
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  .label::after {
+    content: ' →';
+    transition: margin var(--ease);
+  }
+  .tile:hover .label::after {
+    margin-left: 4px;
+  }
+</style>

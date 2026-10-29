@@ -6,6 +6,7 @@ import Faq from '../components/Faq.astro';
 import OfferBand from '../components/OfferBand.astro';
 import ServiceCards from '../components/ServiceCards.astro';
 import { business } from '../data/site';
+import { Picture } from 'astro:assets';
 import { getPhoto, photoAlt } from '../lib/photos';
 import { serviceSchema } from '../lib/schema';
 
@@ -13,6 +14,7 @@ const title = 'Pawn Loans in Dallas, GA';
 const description =
   'Get a pawn loan in Dallas, GA with no credit check. Bring your item and ID, get an offer, and walk out with cash. Pick your item back up when you repay.';
 const crumbs = [{ name: 'Pawn Loans', path: '/pawn-loans/' }];
+const shopFloor = getPhoto('shop-floor');
 
 const faq = [
   {
@@ -50,8 +52,8 @@ const faq = [
     title="Cash today on the things you own"
     lede="A pawn loan is a short-term loan backed by an item you leave with us. No credit check, no bank, no long application. Repay and the item is yours again."
     crumbs={crumbs}
-    photo={getPhoto('counter')}
-    photoAlt={photoAlt.counter}
+    photo={getPhoto('jewelry')}
+    photoAlt={photoAlt.jewelry}
   >
     <div class="btn-row btn-row--stack-sm">
       <a class="btn btn--ink" href="/get-an-offer/?type=pawn" data-track="offer-cta" data-track-where="pawn-hero">Get an Offer</a>
@@ -124,6 +126,20 @@ const faq = [
         <a class="link-arrow" href="/guides/how-pawn-loans-work-in-georgia/">How pawn loans work in Georgia</a>
       </div>
     </div>
+    {
+      shopFloor && (
+        <figure class="container floor">
+          <Picture
+            formats={['avif', 'webp']}
+            src={shopFloor}
+            alt={photoAlt['shop-floor']}
+            widths={[640, 960, 1280, 1600]}
+            sizes="(min-width: 1184px) 1120px, 100vw"
+          />
+          <figcaption class="small muted">Tools, generators, ladders, and outdoor gear on our floor. If it has value, ask us.</figcaption>
+        </figure>
+      )
+    }
   </section>
 
   <section class="section" aria-labelledby="law-h">
@@ -158,6 +174,24 @@ const faq = [
 </Base>
 
 <style>
+  .floor {
+    margin-top: var(--s-7);
+  }
+  .floor :global(img) {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+  @media (min-width: 1024px) {
+    .floor :global(img) {
+      aspect-ratio: 21 / 9;
+      object-position: 50% 60%;
+    }
+  }
+  .floor figcaption {
+    margin-top: var(--s-3);
+  }
   @media (min-width: 480px) {
     .two-col {
       grid-template-columns: 1fr 1fr;

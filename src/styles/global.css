@@ -543,6 +543,9 @@ legend {
 .center {
   text-align: center;
 }
+.nowrap {
+  white-space: nowrap;
+}
 .mt-0 {
   margin-top: 0;
 }

@@ -85,7 +85,7 @@ const columns = [
       {
         variant === 'full' ? (
           <p>
-            {business.licenseLine} · FFL {business.ffl.number}
+            {business.licenseLine} · <span class="nowrap">FFL {business.ffl.number}</span>
           </p>
         ) : (
           <p>Licensed pawnbroker · {fullAddress}</p>
