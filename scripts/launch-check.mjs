@@ -20,7 +20,7 @@ check(business.fflTransferFee, 'Set business.fflTransferFee (FFL page shows "Cal
 check(reviews.length >= 3, `Add owner-approved review quotes (have ${reviews.length}, want 3+)`);
 
 const photos = existsSync('src/assets/photos') ? readdirSync('src/assets/photos').map((f) => f.replace(/\.\w+$/, '')) : [];
-for (const p of ['storefront', 'jewelry', 'shop-floor', 'tools', 'guitars', 'gold', 'silver', 'rifles', 'owner']) {
+for (const p of ['storefront', 'jewelry', 'shop-floor', 'tools', 'guitars', 'gold', 'silver', 'rifles', 'gun-wall', 'owner']) {
   check(photos.includes(p), `Add photo src/assets/photos/${p}.jpg`);
 }
 

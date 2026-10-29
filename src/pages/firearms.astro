@@ -5,6 +5,7 @@ import Icon from '../components/Icon.astro';
 import Faq from '../components/Faq.astro';
 import FacebookFeed from '../components/FacebookFeed.astro';
 import { business } from '../data/site';
+import { Picture } from 'astro:assets';
 import { getPhoto, photoAlt } from '../lib/photos';
 import { serviceSchema } from '../lib/schema';
 
@@ -12,6 +13,7 @@ const title = 'Gun Shop in Dallas, GA';
 const description =
   'Buy, sell, and trade handguns, rifles, and shotguns at New Georgia Pawn in Dallas, GA. Licensed FFL dealer. Trades accepted for guns, gold, and silver.';
 const crumbs = [{ name: 'Firearms', path: '/firearms/' }];
+const gunWall = getPhoto('gun-wall');
 
 const faq = [
   {
@@ -96,6 +98,18 @@ const faq = [
         <p class="muted">
           Every firearm we sell goes through the same federal process. It usually takes a few minutes at the counter.
         </p>
+        {
+          gunWall && (
+            <Picture
+              formats={['avif', 'webp']}
+              src={gunWall}
+              alt={photoAlt['gun-wall']}
+              widths={[400, 600, 900]}
+              sizes="(min-width: 1024px) 560px, 100vw"
+              class="wall-photo"
+            />
+          )
+        }
       </div>
       <ol class="steps">
         <li>
@@ -157,6 +171,21 @@ const faq = [
 </Base>
 
 <style>
+  .wall-photo {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: 50% 20%;
+    border-radius: var(--radius);
+    margin-top: var(--s-5) !important;
+  }
+  @media (min-width: 1024px) {
+    .wall-photo {
+      aspect-ratio: 1 / 1;
+      max-width: 440px;
+      object-position: 50% 40%;
+    }
+  }
   .ways {
     list-style: none;
     padding: 0;

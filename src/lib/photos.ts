@@ -11,6 +11,7 @@
  *   gold         We Buy Gold & Silver hero, Home gallery (portrait)
  *   silver       We Buy Gold & Silver, what to bring (portrait)
  *   rifles       Firearms hero, Home gallery (portrait)
+ *   gun-wall     Firearms, federal rules section (portrait)
  *   owner        About (4:5)
  */
 import type { ImageMetadata } from 'astro';
@@ -19,7 +20,7 @@ const files = import.meta.glob<{ default: ImageMetadata }>('../assets/photos/*.{
   eager: true,
 });
 
-export type PhotoName = 'storefront' | 'jewelry' | 'shop-floor' | 'tools' | 'guitars' | 'gold' | 'silver' | 'rifles' | 'owner';
+export type PhotoName = 'storefront' | 'jewelry' | 'shop-floor' | 'tools' | 'guitars' | 'gold' | 'silver' | 'rifles' | 'gun-wall' | 'owner';
 
 export function getPhoto(name: PhotoName): ImageMetadata | undefined {
   const entry = Object.entries(files).find(([path]) => path.split('/').pop()!.replace(/\.\w+$/, '') === name);
@@ -35,5 +36,6 @@ export const photoAlt: Record<PhotoName, string> = {
   gold: 'A pile of gold rings, chains, bracelets, and pendants on the counter at New Georgia Pawn',
   silver: 'Silver bullion bars and coins, including ten-ounce .999 fine silver bars, on the counter at New Georgia Pawn',
   rifles: 'Youth rifles with pink, laminate, and blue stocks, a tan scoped rifle on a bipod, and a flag-painted rifle at New Georgia Pawn',
+  'gun-wall': 'AR-style pistols and a folding carbine hanging on the gun wall with price tags at New Georgia Pawn',
   owner: 'The owner of New Georgia Pawn behind the counter',
 };
