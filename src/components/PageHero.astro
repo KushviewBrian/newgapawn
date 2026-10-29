@@ -14,8 +14,10 @@ interface Props {
   crumbs?: Crumb[];
   photo?: ImageMetadata;
   photoAlt?: string;
+  /** Portrait photos show at 4:5 on desktop (4:3 on phones) instead of 3:2. */
+  portrait?: boolean;
 }
-const { eyebrow, title, lede, crumbs, photo, photoAlt = '', visitCard = true } = Astro.props;
+const { eyebrow, title, lede, crumbs, photo, photoAlt = '', portrait = false, visitCard = true } = Astro.props;
 const hasSlotAside = Astro.slots.has('aside');
 const hasAside = hasSlotAside || Boolean(photo) || visitCard;
 ---
@@ -50,7 +52,7 @@ const hasAside = hasSlotAside || Boolean(photo) || visitCard;
     </div>
     {
       photo ? (
-        <div class="photo">
+        <div class:list={['photo', { portrait }]}>
           <Picture formats={['avif', 'webp']} src={photo} alt={photoAlt} widths={[480, 800, 1200]} sizes="(min-width: 1024px) 460px, 100vw" loading="eager" fetchpriority="high" />
         </div>
       ) : hasSlotAside ? (
@@ -97,5 +99,18 @@ const hasAside = hasSlotAside || Boolean(photo) || visitCard;
     aspect-ratio: 3 / 2;
     object-fit: cover;
     border-radius: var(--radius);
+  }
+  .portrait :global(img) {
+    aspect-ratio: 4 / 3;
+  }
+  @media (min-width: 1024px) {
+    .portrait {
+      justify-self: end;
+      width: 100%;
+      max-width: 400px;
+    }
+    .portrait :global(img) {
+      aspect-ratio: 4 / 5;
+    }
   }
 </style>
